@@ -1,28 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" prefHeight="523.0" prefWidth="721.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scottyapp.Main.MainController">
+<VBox alignment="CENTER" prefHeight="523.0" prefWidth="721.0" spacing="20.0"
+      xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="scottyapp.Main.MainController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
-   <ImageView fitHeight="209.0" fitWidth="224.0" pickOnBounds="true" preserveRatio="true">
-      <image>
-         <Image url="@../images/scottyapplogo.png" />
-      </image>
-   </ImageView>
-   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Bienvenido a la Gestión de ScottyApp" textAlignment="CENTER" wrappingWidth="524.697265625">
-      <font>
-         <Font name="Arial" size="20.0" />
-      </font>
-   </Text>
 
-    <Button onAction="#irAPantalla2" prefHeight="39.0" prefWidth="114.0" text="Acceder" textAlignment="CENTER">
-      <font>
-         <Font size="18.0" />
-      </font></Button>
+    <ImageView fitHeight="209.0" fitWidth="224.0" pickOnBounds="true" preserveRatio="true">
+        <image>
+            <Image url="@../images/scottyapplogo.png" />
+        </image>
+    </ImageView>
+
+    <Text strokeType="OUTSIDE" strokeWidth="0.0"
+          text="Bienvenido a la Gestión de ScottyApp"
+          textAlignment="CENTER"
+          wrappingWidth="524.697265625">
+        <font>
+            <Font name="Arial" size="20.0" />
+        </font>
+    </Text>
+
+    <ChoiceBox fx:id="menuOpcion" prefWidth="250.0" />
+
+    <Button onAction="#irAPantalla" prefHeight="39.0" prefWidth="114.0"
+            text="Acceder" textAlignment="CENTER">
+        <font>
+            <Font size="18.0" />
+        </font>
+    </Button>
 </VBox>

@@ -7,7 +7,6 @@ import javafx.scene.control.*;
 import java.io.IOException;
 import java.sql.Connection;
 
-
 public class UsuarioController {
 
     static Connection db;
@@ -49,19 +48,14 @@ public class UsuarioController {
         addressColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleStringProperty(datos.getValue().getAddress()));
         phoneColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleStringProperty(datos.getValue().getPhone()));
 
-        // botones deshabilitados por defecto
         guardarButton.setDisable(true);
         editarButton.setDisable(true);
         eliminarButton.setDisable(true);
-
-        // campos deshabilitados por defecto
         setTextFieldsDisable(true);
 
-        // cargar datos de la BD en la lista y en la tabla
         listaUsuarios = MantenimientoUsuario.consulta(db);
         usuarioTableView.setItems(listaUsuarios);
 
-        // al seleccionar una fila se habilitan editar y eliminar
         usuarioTableView.getSelectionModel().selectedItemProperty().addListener((obs, anterior, seleccionado) -> {
             if (seleccionado != null) {
                 editarButton.setDisable(false);
@@ -72,13 +66,11 @@ public class UsuarioController {
             }
         });
 
-        // opciones del SplitMenuButton muestran la opción elegida
         for (MenuItem item : roleMenuButton.getItems()) {
             item.setOnAction(e -> roleMenuButton.setText(item.getText()));
         }
     }
 
-    // habilita o deshabilita todos los TextField
     private void setTextFieldsDisable(boolean disabled) {
         nameTextField.setDisable(disabled);
         emailTextField.setDisable(disabled);
@@ -102,13 +94,11 @@ public class UsuarioController {
     public void nuevoButton() {
         limpiarCampos();
         setTextFieldsDisable(false);
-        idTextField.setDisable(true); // el id lo pone automático la BD
-
+        idTextField.setDisable(true);
         guardarButton.setDisable(false);
         nuevoButton.setDisable(true);
         editarButton.setDisable(true);
         eliminarButton.setDisable(true);
-
         usuarioTableView.getSelectionModel().clearSelection();
         mensajeLabel.setText("Rellena los campos y pulsa Guardar.");
     }
@@ -121,14 +111,13 @@ public class UsuarioController {
         } else {
             setTextFieldsDisable(false);
             idTextField.setText(seleccionado.getIdUser().toString());
-            idTextField.setDisable(true); // el id no se puede editar
+            idTextField.setDisable(true);
             nameTextField.setText(seleccionado.getName());
             emailTextField.setText(seleccionado.getEmail());
             passwordTextField.setText(seleccionado.getPassword());
             roleMenuButton.setText(seleccionado.getRole());
             addressTextField.setText(seleccionado.getAddress());
             phoneTextField.setText(seleccionado.getPhone());
-
             guardarButton.setDisable(false);
             nuevoButton.setDisable(true);
             editarButton.setDisable(true);
@@ -163,7 +152,6 @@ public class UsuarioController {
         String phone = phoneTextField.getText();
 
         if (idTextField.getText().isEmpty()) {
-            // NUEVO usuario — el id lo genera la BD automáticamente
             Usuario nuevo = new Usuario(null, name, email, password, role, address, phone);
             if (MantenimientoUsuario.insertar(db, nuevo)) {
                 mensajeLabel.setText("Usuario insertado.");
@@ -172,7 +160,6 @@ public class UsuarioController {
                 return;
             }
         } else {
-            // EDITAR usuario existente
             Integer id = Integer.parseInt(idTextField.getText());
             Usuario editado = new Usuario(id, name, email, password, role, address, phone);
             MantenimientoUsuario.guardar(db, editado);
@@ -191,8 +178,6 @@ public class UsuarioController {
     @FXML
     public void buscarButton() {
         String textoBuscar = buscarTextField.getText().toLowerCase();
-
-        // busca recorriendo la lista en memoria (sin ir a la BD)
         ObservableList<Usuario> listaFiltrada = FXCollections.observableArrayList();
         for (Usuario u : listaUsuarios) {
             if (u.getName().toLowerCase().contains(textoBuscar)
@@ -200,10 +185,10 @@ public class UsuarioController {
                 listaFiltrada.add(u);
             }
         }
-        usuarioTableView.setItems(listaFiltrada);
-
-        if (buscarTextField.getText().isEmpty()) {
+        if (textoBuscar.isEmpty()) {
             usuarioTableView.setItems(listaUsuarios);
+        } else {
+            usuarioTableView.setItems(listaFiltrada);
         }
     }
 

@@ -48,29 +48,6 @@ public class MantenimientoUsuario {
         return lista;
     }
 
-    public static ObservableList<Usuario> buscar(Connection conexion, String texto) {
-        ObservableList<Usuario> lista = FXCollections.observableArrayList();
-        String query = "SELECT * FROM `user` WHERE name LIKE '%" + texto + "%' OR email LIKE '%" + texto + "%'";
-        try {
-            Statement stmt = conexion.createStatement();
-            ResultSet respuesta = stmt.executeQuery(query);
-            while (respuesta.next()) {
-                lista.add(new Usuario(
-                        respuesta.getInt("idUser"),
-                        respuesta.getString("name"),
-                        respuesta.getString("email"),
-                        respuesta.getString("password"),
-                        respuesta.getString("role"),
-                        respuesta.getString("address"),
-                        respuesta.getString("phone")
-                ));
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return lista;
-    }
-
     public static boolean insertar(Connection conexion, Usuario usuario) {
         String query = "INSERT INTO `user` (name, email, password, role, address, phone) VALUES ('"
                 + usuario.getName() + "','"

@@ -8,11 +8,8 @@ import java.io.IOException;
 
 public class MainController {
 
-    @FXML
-    private ComboBox<String> menuOpcionComboBox;
-
-    @FXML
-    private Label seleccionLabel;
+    @FXML private ComboBox<String> menuOpcionComboBox;
+    @FXML private Label seleccionLabel;
 
     @FXML
     public void initialize() {

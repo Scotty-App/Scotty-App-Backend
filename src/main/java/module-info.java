@@ -10,6 +10,7 @@ module org.example.scottyapp {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires java.sql;
 
     opens scottyapp to javafx.fxml;
     exports scottyapp.Main;

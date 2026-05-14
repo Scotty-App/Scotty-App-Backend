@@ -26,7 +26,7 @@ public class MantenimientoUsuario {
 
     public static ObservableList<Usuario> consulta(Connection conexion) {
         ObservableList<Usuario> lista = FXCollections.observableArrayList();
-        String query = "SELECT * FROM user";
+        String query = "SELECT * FROM `user`";
         try {
             Statement stmt = conexion.createStatement();
             ResultSet respuesta = stmt.executeQuery(query);
@@ -50,7 +50,7 @@ public class MantenimientoUsuario {
 
     public static ObservableList<Usuario> buscar(Connection conexion, String texto) {
         ObservableList<Usuario> lista = FXCollections.observableArrayList();
-        String query = "SELECT * FROM user WHERE name LIKE '%" + texto + "%' OR email LIKE '%" + texto + "%'";
+        String query = "SELECT * FROM `user` WHERE name LIKE '%" + texto + "%' OR email LIKE '%" + texto + "%'";
         try {
             Statement stmt = conexion.createStatement();
             ResultSet respuesta = stmt.executeQuery(query);
@@ -72,7 +72,7 @@ public class MantenimientoUsuario {
     }
 
     public static boolean insertar(Connection conexion, Usuario usuario) {
-        String query = "INSERT INTO user (name, email, password, role, address, phone) VALUES ('"
+        String query = "INSERT INTO `user` (name, email, password, role, address, phone) VALUES ('"
                 + usuario.getName() + "','"
                 + usuario.getEmail() + "','"
                 + usuario.getPassword() + "','"
@@ -90,7 +90,7 @@ public class MantenimientoUsuario {
     }
 
     public static void eliminar(Connection conexion, Usuario usuario) {
-        String query = "DELETE FROM user WHERE idUser = " + usuario.getIdUser();
+        String query = "DELETE FROM `user` WHERE idUser = " + usuario.getIdUser();
         try {
             Statement stmt = conexion.createStatement();
             stmt.executeUpdate(query);
@@ -101,7 +101,7 @@ public class MantenimientoUsuario {
     }
 
     public static void guardar(Connection conexion, Usuario usuario) {
-        String query = "UPDATE user SET name = '" + usuario.getName() + "', "
+        String query = "UPDATE `user` SET name = '" + usuario.getName() + "', "
                 + "email = '" + usuario.getEmail() + "', "
                 + "password = '" + usuario.getPassword() + "', "
                 + "role = '" + usuario.getRole() + "', "

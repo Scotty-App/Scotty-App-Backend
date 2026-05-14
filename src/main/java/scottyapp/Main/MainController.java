@@ -27,20 +27,21 @@ public class MainController {
             try {
                 switch (select) {
                     case "Usuario":
-                        MainApplication.setRoot("/scottyapp/usuario-view");
+                        MainApplication.setRoot("usuario-view");
                         break;
                     case "Productos":
-                        MainApplication.setRoot("/scottyapp/item-view");
+                        MainApplication.setRoot("item-view");
                         break;
                     case "Pedido":
-                        MainApplication.setRoot("/scottyapp/order-view");
+                        MainApplication.setRoot("order-view");
                         break;
                     case "DetallesPedido":
-                        MainApplication.setRoot("/scottyapp/orderDetails-view");
+                        MainApplication.setRoot("orderDetails-view");
                         break;
                 }
             } catch (IOException e) {
                 System.out.println("Error al cargar la vista: " + e.getMessage());
+                e.printStackTrace();
             }
         } else {
             seleccionLabel.setVisible(true);

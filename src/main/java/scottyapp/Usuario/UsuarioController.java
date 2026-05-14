@@ -1,13 +1,17 @@
 package scottyapp.Usuario;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import java.io.IOException;
 import java.sql.Connection;
 
+
 public class UsuarioController {
 
     static Connection db;
+    private ObservableList<Usuario> listaUsuarios;
 
     @FXML public TableView<Usuario> usuarioTableView;
     @FXML public TableColumn<Usuario, Integer> idUserColumn;
@@ -29,6 +33,9 @@ public class UsuarioController {
     @FXML public SplitMenuButton roleMenuButton;
     @FXML public Label mensajeLabel;
     @FXML public Button guardarButton;
+    @FXML public Button editarButton;
+    @FXML public Button eliminarButton;
+    @FXML public Button nuevoButton;
 
     @FXML
     public void initialize() {
@@ -42,12 +49,46 @@ public class UsuarioController {
         addressColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleStringProperty(datos.getValue().getAddress()));
         phoneColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleStringProperty(datos.getValue().getPhone()));
 
+        // botones deshabilitados por defecto
         guardarButton.setDisable(true);
-        usuarioTableView.setItems(MantenimientoUsuario.consulta(db));
+        editarButton.setDisable(true);
+        eliminarButton.setDisable(true);
+
+        // campos deshabilitados por defecto
+        setTextFieldsDisable(true);
+
+        // cargar datos de la BD en la lista y en la tabla
+        listaUsuarios = MantenimientoUsuario.consulta(db);
+        usuarioTableView.setItems(listaUsuarios);
+
+        // al seleccionar una fila se habilitan editar y eliminar
+        usuarioTableView.getSelectionModel().selectedItemProperty().addListener((obs, anterior, seleccionado) -> {
+            if (seleccionado != null) {
+                editarButton.setDisable(false);
+                eliminarButton.setDisable(false);
+            } else {
+                editarButton.setDisable(true);
+                eliminarButton.setDisable(true);
+            }
+        });
+
+        // opciones del SplitMenuButton muestran la opción elegida
+        for (MenuItem item : roleMenuButton.getItems()) {
+            item.setOnAction(e -> roleMenuButton.setText(item.getText()));
+        }
     }
 
-    @FXML
-    public void nuevoButton() {
+    // habilita o deshabilita todos los TextField
+    private void setTextFieldsDisable(boolean disabled) {
+        nameTextField.setDisable(disabled);
+        emailTextField.setDisable(disabled);
+        passwordTextField.setDisable(disabled);
+        addressTextField.setDisable(disabled);
+        phoneTextField.setDisable(disabled);
+        roleMenuButton.setDisable(disabled);
+    }
+
+    private void limpiarCampos() {
         idTextField.clear();
         nameTextField.clear();
         emailTextField.clear();
@@ -58,20 +99,40 @@ public class UsuarioController {
     }
 
     @FXML
+    public void nuevoButton() {
+        limpiarCampos();
+        setTextFieldsDisable(false);
+        idTextField.setDisable(true); // el id lo pone automático la BD
+
+        guardarButton.setDisable(false);
+        nuevoButton.setDisable(true);
+        editarButton.setDisable(true);
+        eliminarButton.setDisable(true);
+
+        usuarioTableView.getSelectionModel().clearSelection();
+        mensajeLabel.setText("Rellena los campos y pulsa Guardar.");
+    }
+
+    @FXML
     public void editarButton() {
         Usuario seleccionado = usuarioTableView.getSelectionModel().getSelectedItem();
         if (seleccionado == null) {
             mensajeLabel.setText("No hay ningún usuario seleccionado.");
         } else {
-            guardarButton.setDisable(false);
+            setTextFieldsDisable(false);
             idTextField.setText(seleccionado.getIdUser().toString());
-            idTextField.setDisable(true);
+            idTextField.setDisable(true); // el id no se puede editar
             nameTextField.setText(seleccionado.getName());
             emailTextField.setText(seleccionado.getEmail());
             passwordTextField.setText(seleccionado.getPassword());
             roleMenuButton.setText(seleccionado.getRole());
             addressTextField.setText(seleccionado.getAddress());
             phoneTextField.setText(seleccionado.getPhone());
+
+            guardarButton.setDisable(false);
+            nuevoButton.setDisable(true);
+            editarButton.setDisable(true);
+            eliminarButton.setDisable(true);
         }
     }
 
@@ -83,13 +144,17 @@ public class UsuarioController {
         } else {
             MantenimientoUsuario.eliminar(db, seleccionado);
             mensajeLabel.setText("Usuario eliminado.");
-            usuarioTableView.setItems(MantenimientoUsuario.consulta(db));
+            listaUsuarios = MantenimientoUsuario.consulta(db);
+            usuarioTableView.setItems(listaUsuarios);
+            limpiarCampos();
+            setTextFieldsDisable(true);
+            guardarButton.setDisable(true);
+            nuevoButton.setDisable(false);
         }
     }
 
     @FXML
     public void guardarButton() {
-        Integer id = Integer.parseInt(idTextField.getText());
         String name = nameTextField.getText();
         String email = emailTextField.getText();
         String password = passwordTextField.getText();
@@ -97,22 +162,53 @@ public class UsuarioController {
         String address = addressTextField.getText();
         String phone = phoneTextField.getText();
 
-        MantenimientoUsuario.guardar(db, new Usuario(id, name, email, password, role, address, phone));
-        guardarButton.setDisable(true);
+        if (idTextField.getText().isEmpty()) {
+            // NUEVO usuario — el id lo genera la BD automáticamente
+            Usuario nuevo = new Usuario(null, name, email, password, role, address, phone);
+            if (MantenimientoUsuario.insertar(db, nuevo)) {
+                mensajeLabel.setText("Usuario insertado.");
+            } else {
+                mensajeLabel.setText("Error al insertar. Revisa los datos.");
+                return;
+            }
+        } else {
+            // EDITAR usuario existente
+            Integer id = Integer.parseInt(idTextField.getText());
+            Usuario editado = new Usuario(id, name, email, password, role, address, phone);
+            MantenimientoUsuario.guardar(db, editado);
+            mensajeLabel.setText("Usuario modificado.");
+        }
+
+        listaUsuarios = MantenimientoUsuario.consulta(db);
+        usuarioTableView.setItems(listaUsuarios);
+        limpiarCampos();
+        setTextFieldsDisable(true);
         idTextField.setDisable(false);
-        mensajeLabel.setText("Usuario modificado.");
-        nuevoButton();
-        usuarioTableView.setItems(MantenimientoUsuario.consulta(db));
+        guardarButton.setDisable(true);
+        nuevoButton.setDisable(false);
     }
 
     @FXML
     public void buscarButton() {
-        String textoBuscar = buscarTextField.getText();
-        usuarioTableView.setItems(MantenimientoUsuario.buscar(db, textoBuscar));
+        String textoBuscar = buscarTextField.getText().toLowerCase();
+
+        // busca recorriendo la lista en memoria (sin ir a la BD)
+        ObservableList<Usuario> listaFiltrada = FXCollections.observableArrayList();
+        for (Usuario u : listaUsuarios) {
+            if (u.getName().toLowerCase().contains(textoBuscar)
+                    || u.getEmail().toLowerCase().contains(textoBuscar)) {
+                listaFiltrada.add(u);
+            }
+        }
+        usuarioTableView.setItems(listaFiltrada);
+
+        if (buscarTextField.getText().isEmpty()) {
+            usuarioTableView.setItems(listaUsuarios);
+        }
     }
 
     @FXML
     public void volverButton() throws IOException {
-        scottyapp.Main.MainApplication.setRoot("/scottyapp/main-view");
+        scottyapp.Main.MainApplication.setRoot("main-view");
     }
 }

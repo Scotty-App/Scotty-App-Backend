@@ -26,7 +26,9 @@ public class MainApplication extends Application {
     }
 
     private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(fxml + ".fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(
+                MainApplication.class.getResource("/scottyapp/" + fxml + ".fxml")
+        );
         return fxmlLoader.load();
     }
 

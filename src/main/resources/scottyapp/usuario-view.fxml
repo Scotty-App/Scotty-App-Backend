@@ -1,14 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="scottyapp.Usuario.UsuarioController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scottyapp.Usuario.UsuarioController">
+   <children>
+      <TableView prefHeight="200.0" prefWidth="600.0">
+        <columns>
+          <TableColumn prefWidth="55.130430698394775" text="idUser" />
+          <TableColumn prefWidth="95.13043212890625" text="Name" />
+            <TableColumn prefWidth="75.0" text="Email" />
+            <TableColumn prefWidth="75.0" text="Password" />
+            <TableColumn prefWidth="64.13043212890625" text="Role" />
+            <TableColumn prefWidth="138.72174072265625" text="Address" />
+            <TableColumn prefWidth="96.59130859375" text="Phone" />
+        </columns>
+      </TableView>
+      <TextField layoutX="310.0" layoutY="208.0" text="Buscar" />
+      <Button layoutX="460.0" layoutY="208.0" mnemonicParsing="false" text="Buscar" />
+      <TextField layoutX="14.0" layoutY="207.0" prefHeight="28.0" prefWidth="56.0" text="Id" />
+      <TextField layoutX="14.0" layoutY="242.0" prefHeight="27.0" prefWidth="188.0" text="Name" />
+      <TextField layoutX="14.0" layoutY="282.0" prefHeight="28.0" prefWidth="189.0" text="Email" />
+      <TextField layoutX="213.0" layoutY="242.0" text="Password" />
+      <SplitMenuButton layoutX="86.0" layoutY="208.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="101.0" text="Role">
+        <items>
+          <MenuItem mnemonicParsing="false" text="Alumno" />
+          <MenuItem mnemonicParsing="false" text="Administrador" />
+        </items>
+      </SplitMenuButton>
+      <TextField alignment="TOP_LEFT" layoutX="14.0" layoutY="322.0" prefHeight="46.0" prefWidth="345.0" text="Address" />
+      <TextField layoutX="213.0" layoutY="283.0" text="Phone" />
+      <Button layoutX="526.0" layoutY="208.0" mnemonicParsing="false" text="Nuevo" />
+      <Button layoutX="460.0" layoutY="241.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="49.0" text="Editar" />
+      <Button layoutX="522.0" layoutY="242.0" mnemonicParsing="false" text="Eliminar" textFill="#f40000" />
+      <Button disable="true" layoutX="382.0" layoutY="342.0" mnemonicParsing="false" text="Guardar cambios" />
+   </children>
 </AnchorPane>

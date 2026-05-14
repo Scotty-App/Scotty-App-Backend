@@ -18,6 +18,7 @@ public class MainApplication extends Application {
         scene = new Scene(fxmlLoader.load(), 1150, 840);
         stage.setTitle("Gestor de Tablas - ScottyApp");
         stage.setScene(scene);
+        stage.setMaximized(true);
         stage.show();
     }
 

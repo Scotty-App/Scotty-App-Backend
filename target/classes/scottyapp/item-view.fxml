@@ -1,14 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="scottyapp.Item.ItemController"
-            prefHeight="400.0" prefWidth="600.0">
+<AnchorPane prefHeight="840.0" prefWidth="1150.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scottyapp.Item.ItemController">
+    <children>
+        <TableView fx:id="itemTableView" prefHeight="400.0" prefWidth="1150.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <columns>
+                <TableColumn fx:id="idProductColumn" prefWidth="80.0" text="ID" />
+                <TableColumn fx:id="nameColumn" prefWidth="295.0" text="Name" />
+                <TableColumn fx:id="descriptionColumn" prefWidth="373.0" text="Description" />
+                <TableColumn fx:id="priceColumn" prefWidth="129.0" text="Price" />
+                <TableColumn fx:id="stockColumn" prefWidth="83.0" text="Stock" />
+                <TableColumn fx:id="categoryColumn" prefWidth="192.0" text="Category" />
+            </columns>
+        </TableView>
 
+        <TextField fx:id="buscarTextField" layoutX="332.0" layoutY="424.0" prefHeight="38.0" prefWidth="328.0" promptText="Buscar" />
+        <Button layoutX="679.0" layoutY="424.0" mnemonicParsing="false" onAction="#buscarButton" prefHeight="38.0" prefWidth="63.0" text="Buscar" />
+        <Button fx:id="nuevoButton" layoutX="922.0" layoutY="462.0" mnemonicParsing="false" onAction="#nuevoButton" prefHeight="38.0" prefWidth="82.0" text="Nuevo" />
+
+        <TextField fx:id="idTextField" layoutX="163.0" layoutY="495.0" prefHeight="28.0" prefWidth="56.0" promptText="Id" disable="true" />
+        <TextField fx:id="nameTextField" layoutX="259.0" layoutY="495.0" prefHeight="28.0" prefWidth="296.0" promptText="Name" />
+        <SplitMenuButton fx:id="categoryMenuButton" layoutX="660.0" layoutY="495.0" prefHeight="28.0" prefWidth="171.0" text="Category">
+            <items>
+                <MenuItem mnemonicParsing="false" text="Hardware" />
+                <MenuItem mnemonicParsing="false" text="Peripherals" />
+                <MenuItem mnemonicParsing="false" text="Gaming" />
+                <MenuItem mnemonicParsing="false" text="Storage" />
+                <MenuItem mnemonicParsing="false" text="Accessories" />
+                <MenuItem mnemonicParsing="false" text="Merchandising" />
+            </items>
+        </SplitMenuButton>
+        <Button fx:id="editarButton" disable="true" layoutX="922.0" layoutY="526.0" mnemonicParsing="false" onAction="#editarButton" prefHeight="38.0" prefWidth="83.0" text="Editar" />
+
+        <TextField fx:id="descriptionTextField" layoutX="259.0" layoutY="545.0" prefHeight="27.0" prefWidth="296.0" promptText="Description" />
+        <TextField fx:id="priceTextField" layoutX="660.0" layoutY="545.0" prefHeight="27.0" prefWidth="85.0" promptText="Price" />
+        <TextField fx:id="stockTextField" layoutX="754.0" layoutY="545.0" prefHeight="27.0" prefWidth="85.0" promptText="Stock" />
+        <Button fx:id="eliminarButton" disable="true" layoutX="922.0" layoutY="597.0" mnemonicParsing="false" onAction="#eliminarButton" prefHeight="38.0" prefWidth="83.0" text="Eliminar" textFill="#f40000" />
+
+        <Label fx:id="mensajeLabel" layoutX="399.0" layoutY="739.0" prefHeight="27.0" prefWidth="193.0" text="" />
+        <Button fx:id="guardarButton" disable="true" layoutX="922.0" layoutY="665.0" mnemonicParsing="false" onAction="#guardarButton" prefHeight="38.0" prefWidth="83.0" text="Guardar" />
+
+        <Button layoutX="30.0" layoutY="778.0" mnemonicParsing="false" onAction="#volverButton" text="&lt;-- Volver al menú principal" />
+    </children>
 </AnchorPane>

@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
 
 public class ItemController {
 
@@ -14,20 +14,21 @@ public class ItemController {
     private ObservableList<Item> listaItem;
 
     @FXML public TableView<Item> itemTableView;
+    @FXML public TableColumn<Item, Integer> idProductColumn;
     @FXML public TableColumn<Item, String> nameColumn;
-    @FXML public TableColumn<Item, String> descriptionlColumn;
+    @FXML public TableColumn<Item, String> descriptionColumn;
     @FXML public TableColumn<Item, Double> priceColumn;
     @FXML public TableColumn<Item, Integer> stockColumn;
     @FXML public TableColumn<Item, String> categoryColumn;
 
+    @FXML public TextField idTextField;
     @FXML public TextField buscarTextField;
     @FXML public TextField nameTextField;
     @FXML public TextField descriptionTextField;
     @FXML public TextField priceTextField;
     @FXML public TextField stockTextField;
-    @FXML public TextField categoryTextField;
 
-    @FXML public Button buscarButton;
+    @FXML public SplitMenuButton categoryMenuButton;
     @FXML public Button nuevoButton;
     @FXML public Button editarButton;
     @FXML public Button eliminarButton;
@@ -38,11 +39,12 @@ public class ItemController {
     public void initialize() {
         db = MantenimientoItem.conexion();
 
+        idProductColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleIntegerProperty(datos.getValue().getIdProduct()).asObject());
         nameColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleStringProperty(datos.getValue().getName()));
-        descriptionlColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleStringProperty(datos.getValue().getDescription()));
+        descriptionColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleStringProperty(datos.getValue().getDescription()));
         priceColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleDoubleProperty(datos.getValue().getPrice()).asObject());
         stockColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleIntegerProperty(datos.getValue().getStock()).asObject());
-        categoryColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleStringProperty(datos.getValue().getDescription()));
+        categoryColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleStringProperty(datos.getValue().getCategory()));
 
         guardarButton.setDisable(true);
         editarButton.setDisable(true);
@@ -62,6 +64,9 @@ public class ItemController {
             }
         });
 
+        for (MenuItem item : categoryMenuButton.getItems()) {
+            item.setOnAction(e -> categoryMenuButton.setText(item.getText()));
+        }
     }
 
     private void setTextFieldsDisable(boolean disabled) {
@@ -69,22 +74,23 @@ public class ItemController {
         descriptionTextField.setDisable(disabled);
         priceTextField.setDisable(disabled);
         stockTextField.setDisable(disabled);
-        categoryTextField.setDisable(disabled);
+        categoryMenuButton.setDisable(disabled);
     }
 
     private void limpiarCampos() {
+        idTextField.clear();
         nameTextField.clear();
         descriptionTextField.clear();
         priceTextField.clear();
         stockTextField.clear();
-        categoryTextField.clear();
+        categoryMenuButton.setText("Category");
     }
 
     @FXML
     public void nuevoButton() {
         limpiarCampos();
         setTextFieldsDisable(false);
-        nameTextField.setDisable(true);
+        idTextField.setDisable(true);
         guardarButton.setDisable(false);
         nuevoButton.setDisable(true);
         editarButton.setDisable(true);
@@ -97,15 +103,16 @@ public class ItemController {
     public void editarButton() {
         Item seleccionado = itemTableView.getSelectionModel().getSelectedItem();
         if (seleccionado == null) {
-            mensajeLabel.setText("No hay ningún usuario seleccionado.");
+            mensajeLabel.setText("No hay ningún item seleccionado.");
         } else {
             setTextFieldsDisable(false);
+            idTextField.setText(seleccionado.getIdProduct().toString());
+            idTextField.setDisable(true);
             nameTextField.setText(seleccionado.getName());
-            nameTextField.setDisable(true);
             descriptionTextField.setText(seleccionado.getDescription());
             priceTextField.setText(seleccionado.getPrice().toString());
             stockTextField.setText(seleccionado.getStock().toString());
-            categoryTextField.setText(seleccionado.getCategory());
+            categoryMenuButton.setText(seleccionado.getCategory());
             guardarButton.setDisable(false);
             nuevoButton.setDisable(true);
             editarButton.setDisable(true);
@@ -134,18 +141,38 @@ public class ItemController {
     public void guardarButton() {
         String name = nameTextField.getText();
         String description = descriptionTextField.getText();
-        Double price = Double.valueOf(priceTextField.getText());
-        Integer stock = Integer.valueOf(stockTextField.getText());
-        String category = categoryTextField.getText();
+        String category = categoryMenuButton.getText();
+        Double price;
+        Integer stock;
 
-        Item nuevo = new Item(name, description, price, stock, category);
-        MantenimientoItem.insertar(db, nuevo);
+        try {
+            price = Double.parseDouble(priceTextField.getText());
+            stock = Integer.parseInt(stockTextField.getText());
+        } catch (NumberFormatException e) {
+            mensajeLabel.setText("Precio y stock deben ser números.");
+            return;
+        }
+
+        if (idTextField.getText().isEmpty()) {
+            Item nuevo = new Item(null, name, description, price, stock, category);
+            if (MantenimientoItem.insertar(db, nuevo)) {
+                mensajeLabel.setText("Item insertado.");
+            } else {
+                mensajeLabel.setText("Error al insertar. Revisa los datos.");
+                return;
+            }
+        } else {
+            Integer id = Integer.parseInt(idTextField.getText());
+            Item editado = new Item(id, name, description, price, stock, category);
+            MantenimientoItem.guardar(db, editado);
+            mensajeLabel.setText("Item modificado.");
+        }
 
         listaItem = MantenimientoItem.consulta(db);
         itemTableView.setItems(listaItem);
         limpiarCampos();
         setTextFieldsDisable(true);
-        nameTextField.setDisable(false);
+        idTextField.setDisable(false);
         guardarButton.setDisable(true);
         nuevoButton.setDisable(false);
     }

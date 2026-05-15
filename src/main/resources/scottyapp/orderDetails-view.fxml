@@ -1,14 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="scottyapp.OrderDetails.OrderDetailsController"
-            prefHeight="400.0" prefWidth="600.0">
+<AnchorPane prefHeight="840.0" prefWidth="1150.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scottyapp.OrderDetails.OrderDetailsController">
+    <children>
+        <Label fx:id="pedidoLabel" layoutX="14.0" layoutY="10.0" prefHeight="30.0" prefWidth="400.0" text="Detalles del pedido" style="-fx-font-size: 16px;" />
 
+        <TableView fx:id="orderDetailsTableView" prefHeight="250.0" prefWidth="1150.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+            <columns>
+                <TableColumn fx:id="idDetailColumn" prefWidth="100.0" text="ID Detalle" />
+                <TableColumn fx:id="quantityColumn" prefWidth="150.0" text="Cantidad" />
+                <TableColumn fx:id="subtotalColumn" prefWidth="150.0" text="Subtotal" />
+                <TableColumn fx:id="idOrderColumn" prefWidth="150.0" text="ID Pedido" />
+                <TableColumn fx:id="idProductColumn" prefWidth="150.0" text="ID Producto" />
+            </columns>
+        </TableView>
+
+        <TextField fx:id="buscarTextField" layoutX="14.0" layoutY="305.0" prefHeight="32.0" prefWidth="280.0" promptText="Buscar" />
+        <Button fx:id="nuevoButton" layoutX="922.0" layoutY="305.0" mnemonicParsing="false" onAction="#nuevoButton" prefHeight="32.0" prefWidth="82.0" text="Nuevo" />
+        <Button fx:id="editarButton" disable="true" layoutX="600.0" layoutY="305.0" mnemonicParsing="false" onAction="#editarButton" prefHeight="32.0" prefWidth="83.0" text="Editar" />
+        <Button fx:id="eliminarButton" disable="true" layoutX="695.0" layoutY="305.0" mnemonicParsing="false" onAction="#eliminarButton" prefHeight="32.0" prefWidth="83.0" text="Eliminar" textFill="#f40000" />
+
+        <TextField fx:id="idDetailTextField" layoutX="14.0" layoutY="355.0" prefHeight="28.0" prefWidth="56.0" promptText="ID" disable="true" />
+        <TextField fx:id="quantityTextField" layoutX="80.0" layoutY="355.0" prefHeight="28.0" prefWidth="100.0" promptText="Cantidad" />
+        <TextField fx:id="subtotalTextField" layoutX="190.0" layoutY="355.0" prefHeight="28.0" prefWidth="100.0" promptText="Subtotal" />
+        <Button fx:id="guardarButton" disable="true" layoutX="922.0" layoutY="355.0" mnemonicParsing="false" onAction="#guardarButton" prefHeight="28.0" prefWidth="83.0" text="Guardar" />
+
+        <Label text="Productos disponibles:" layoutX="14.0" layoutY="400.0" />
+        <TableView fx:id="productosTableView" prefHeight="200.0" prefWidth="700.0" layoutX="14.0" layoutY="420.0">
+            <columns>
+                <TableColumn fx:id="idProductDisponibleColumn" prefWidth="80.0" text="ID" />
+                <TableColumn fx:id="nameProductColumn" prefWidth="300.0" text="Nombre" />
+                <TableColumn fx:id="priceProductColumn" prefWidth="120.0" text="Precio" />
+            </columns>
+        </TableView>
+
+        <Button fx:id="anyadirProductoButton" disable="true" layoutX="730.0" layoutY="420.0" mnemonicParsing="false" onAction="#anyadirProductoButton" prefHeight="32.0" prefWidth="130.0" text="Calcular subtotal" />
+
+        <Label fx:id="mensajeLabel" layoutX="14.0" layoutY="635.0" prefHeight="27.0" prefWidth="400.0" text="" />
+        <Button layoutX="30.0" layoutY="778.0" mnemonicParsing="false" onAction="#volverButton" text="&lt;-- Volver a pedidos" />
+    </children>
 </AnchorPane>

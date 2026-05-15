@@ -73,6 +73,7 @@ public class OrderController {
         eliminarButton.setDisable(true);
         verDetallesButton.setDisable(true);
         anyadirProductoButton.setDisable(true);
+        cantidadTextField.setDisable(true);
         setFormDisable(true);
 
         // Cargar pedidos en la tabla principal
@@ -102,10 +103,11 @@ public class OrderController {
             }
         });
 
-        // Al seleccionar un producto se habilita el boton de anyadir
+        // Al seleccionar un producto se habilitan el boton de anyadir y el campo cantidad
         productosTableView.getSelectionModel().selectedItemProperty().addListener((obs, anterior, seleccionado) -> {
             if (seleccionado != null) {
                 anyadirProductoButton.setDisable(false);
+                cantidadTextField.setDisable(false);
             }
         });
 
@@ -167,13 +169,16 @@ public class OrderController {
         }
         try {
             Integer cantidad = Integer.parseInt(cantidadTexto);
+            if (cantidad <= 0) {
+                mensajeLabel.setText("La cantidad debe ser mayor que cero.");
+                return;
+            }
             Double subtotal = productoSeleccionado.getPrice() * cantidad;
             Double totalActual = totalTextField.getText().isEmpty() ? 0.0 : Double.parseDouble(totalTextField.getText());
             totalTextField.setText(String.format("%.2f", totalActual + subtotal));
-            mensajeLabel.setText("Producto anyadido: " + productoSeleccionado.getName() + " x" + cantidad);
-            // Limpiar cantidad para el siguiente producto sin bloquear el campo
+            mensajeLabel.setText("Anyadido: " + productoSeleccionado.getName() + " x" + cantidad + " = " + String.format("%.2f", subtotal));
             cantidadTextField.clear();
-            cantidadTextField.setDisable(false);
+            cantidadTextField.requestFocus();
         } catch (NumberFormatException e) {
             mensajeLabel.setText("La cantidad debe ser un numero entero.");
         }

@@ -7,6 +7,7 @@ import java.sql.*;
 
 public class MantenimientoUsuario {
 
+    // abre conexion con la base de datos
     public static Connection conexion() {
         Connection conexion;
         String host = "jdbc:mariadb://localhost:3307/";
@@ -16,7 +17,7 @@ public class MantenimientoUsuario {
         System.out.println("Conectando...");
         try {
             conexion = DriverManager.getConnection(host + bd, user, psw);
-            System.out.println("Conexión realizada con éxito.");
+            System.out.println("Conexion realizada con exito.");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             throw new RuntimeException(e);
@@ -24,21 +25,22 @@ public class MantenimientoUsuario {
         return conexion;
     }
 
+    // devuelve todos los usuarios de la tabla user
     public static ObservableList<Usuario> consulta(Connection conexion) {
         ObservableList<Usuario> lista = FXCollections.observableArrayList();
-        String query = "SELECT * FROM `user`";
+        String query = "SELECT * FROM `USER`";
         try {
             Statement stmt = conexion.createStatement();
-            ResultSet respuesta = stmt.executeQuery(query);
-            while (respuesta.next()) {
+            ResultSet resultado = stmt.executeQuery(query);
+            while (resultado.next()) {
                 lista.add(new Usuario(
-                        respuesta.getInt("idUser"),
-                        respuesta.getString("name"),
-                        respuesta.getString("email"),
-                        respuesta.getString("password"),
-                        respuesta.getString("role"),
-                        respuesta.getString("address"),
-                        respuesta.getString("phone")
+                        resultado.getInt("idUser"),
+                        resultado.getString("name"),
+                        resultado.getString("email"),
+                        resultado.getString("password"),
+                        resultado.getString("role"),
+                        resultado.getString("address"),
+                        resultado.getString("phone")
                 ));
             }
         } catch (SQLException e) {
@@ -48,14 +50,15 @@ public class MantenimientoUsuario {
         return lista;
     }
 
+    // inserta un usuario nuevo, devuelve false si el email ya existe
     public static boolean insertar(Connection conexion, Usuario usuario) {
-        String query = "INSERT INTO `user` (name, email, password, role, address, phone) VALUES ('"
+        String query = "INSERT INTO `USER` (name, email, password, role, address, phone) VALUES ('"
                 + usuario.getName() + "','"
                 + usuario.getEmail() + "','"
                 + usuario.getPassword() + "','"
                 + usuario.getRole() + "','"
-                + usuario.getAddress() + "','"
-                + usuario.getPhone() + "')";
+                + usuario.getAddress() + "',"
+                + (usuario.getPhone() == null ? "NULL" : "'" + usuario.getPhone() + "'") + ")";
         try {
             Statement stmt = conexion.createStatement();
             stmt.executeUpdate(query);
@@ -66,33 +69,20 @@ public class MantenimientoUsuario {
         }
     }
 
-    public static void eliminar(Connection conexion, Usuario usuario) {
-        String query = "DELETE FROM `user` WHERE idUser = " + usuario.getIdUser();
+    // elimina un usuario por su id, devuelve false si hay error
+    public static boolean eliminar(Connection conexion, Usuario usuario) {
+        String query = "DELETE FROM `USER` WHERE idUser = " + usuario.getIdUser();
         try {
             Statement stmt = conexion.createStatement();
             stmt.executeUpdate(query);
+            return true;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            throw new RuntimeException(e);
+            return false;
         }
     }
 
-//    public static void guardar(Connection conexion, Usuario usuario) {
-//        String query = "UPDATE `user` SET name = '" + usuario.getName() + "', "
-//                + "email = '" + usuario.getEmail() + "', "
-//                + "password = '" + usuario.getPassword() + "', "
-//                + "role = '" + usuario.getRole() + "', "
-//                + "address = '" + usuario.getAddress() + "', "
-//                + "phone = '" + usuario.getPhone() + "' "
-//                + "WHERE idUser = " + usuario.getIdUser();
-//        try {
-//            Statement stmt = conexion.createStatement();
-//            stmt.executeUpdate(query);
-//        } catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//            throw new RuntimeException(e);
-//        }
-//    }
+    // actualiza los datos de un usuario existente, devuelve false si hay error
     public static boolean guardar(Connection conexion, Usuario usuario) {
         String query = "UPDATE `USER` SET name = '" + usuario.getName() + "', "
                 + "email = '" + usuario.getEmail() + "', "

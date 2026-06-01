@@ -24,20 +24,24 @@ public class MantenimientoOrderDetails {
         return conexion;
     }
 
-    // Consulta los detalles de un pedido concreto filtrando por idOrder
+    // Devuelve las lineas de un pedido con el nombre del producto incluido via JOIN
     public static ObservableList<OrderDetails> consulta(Connection conexion, Integer idOrder) {
         ObservableList<OrderDetails> lista = FXCollections.observableArrayList();
-        String query = "SELECT * FROM `ORDER_DETAILS` WHERE idOrder = " + idOrder;
+        String query = "SELECT od.idDetail, od.quantity, od.subtotal, od.idOrder, od.idProduct, p.name AS nombreProducto "
+                + "FROM `ORDER_DETAILS` od "
+                + "JOIN `PRODUCT` p ON od.idProduct = p.idProduct "
+                + "WHERE od.idOrder = " + idOrder;
         try {
             Statement stmt = conexion.createStatement();
-            ResultSet respuesta = stmt.executeQuery(query);
-            while (respuesta.next()) {
+            ResultSet resultado = stmt.executeQuery(query);
+            while (resultado.next()) {
                 lista.add(new OrderDetails(
-                        respuesta.getInt("idDetail"),
-                        respuesta.getInt("quantity"),
-                        respuesta.getDouble("subtotal"),
-                        respuesta.getInt("idOrder"),
-                        respuesta.getInt("idProduct")
+                        resultado.getInt("idDetail"),
+                        resultado.getInt("quantity"),
+                        resultado.getDouble("subtotal"),
+                        resultado.getInt("idOrder"),
+                        resultado.getInt("idProduct"),
+                        resultado.getString("nombreProducto")
                 ));
             }
         } catch (SQLException e) {
@@ -63,27 +67,42 @@ public class MantenimientoOrderDetails {
         }
     }
 
-    public static void eliminar(Connection conexion, OrderDetails detalle) {
+    public static boolean eliminar(Connection conexion, OrderDetails detalle) {
         String query = "DELETE FROM `ORDER_DETAILS` WHERE idDetail = " + detalle.getIdDetail();
         try {
             Statement stmt = conexion.createStatement();
             stmt.executeUpdate(query);
+            return true;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            throw new RuntimeException(e);
+            return false;
         }
     }
 
-    public static void guardar(Connection conexion, OrderDetails detalle) {
+    public static boolean guardar(Connection conexion, OrderDetails detalle) {
         String query = "UPDATE `ORDER_DETAILS` SET quantity = " + detalle.getQuantity() + ", "
                 + "subtotal = " + detalle.getSubtotal() + " "
                 + "WHERE idDetail = " + detalle.getIdDetail();
         try {
             Statement stmt = conexion.createStatement();
             stmt.executeUpdate(query);
+            return true;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            throw new RuntimeException(e);
+            return false;
+        }
+    }
+
+    // Recalcula el total del pedido sumando todos sus subtotales
+    public static void recalcularTotal(Connection conexion, Integer idOrder) {
+        String query = "UPDATE `ORDER` SET total = ("
+                + "SELECT COALESCE(SUM(subtotal), 0) FROM `ORDER_DETAILS` WHERE idOrder = " + idOrder
+                + ") WHERE idOrder = " + idOrder;
+        try {
+            Statement stmt = conexion.createStatement();
+            stmt.executeUpdate(query);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
     }
 }

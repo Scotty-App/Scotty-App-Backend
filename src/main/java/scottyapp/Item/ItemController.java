@@ -7,12 +7,15 @@ import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.Arrays;
+import java.util.List;
 
 public class ItemController {
 
     static Connection db;
-    private ObservableList<Item> listaItem;
+    private ObservableList<Item> listaProductos;
 
+    // columnas de la tabla de productos
     @FXML public TableView<Item> itemTableView;
     @FXML public TableColumn<Item, Integer> idProductColumn;
     @FXML public TableColumn<Item, String> nameColumn;
@@ -21,6 +24,7 @@ public class ItemController {
     @FXML public TableColumn<Item, Integer> stockColumn;
     @FXML public TableColumn<Item, String> categoryColumn;
 
+    // campos del formulario
     @FXML public TextField idTextField;
     @FXML public TextField buscarTextField;
     @FXML public TextField nameTextField;
@@ -28,6 +32,7 @@ public class ItemController {
     @FXML public TextField priceTextField;
     @FXML public TextField stockTextField;
 
+    // selector de categoria y botones
     @FXML public SplitMenuButton categoryMenuButton;
     @FXML public Button nuevoButton;
     @FXML public Button editarButton;
@@ -39,6 +44,7 @@ public class ItemController {
     public void initialize() {
         db = MantenimientoItem.conexion();
 
+        // enlazar columnas con los atributos del objeto producto
         idProductColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleIntegerProperty(datos.getValue().getIdProduct()).asObject());
         nameColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleStringProperty(datos.getValue().getName()));
         descriptionColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleStringProperty(datos.getValue().getDescription()));
@@ -46,16 +52,19 @@ public class ItemController {
         stockColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleIntegerProperty(datos.getValue().getStock()).asObject());
         categoryColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleStringProperty(datos.getValue().getCategory()));
 
+        // estado inicial de botones
         guardarButton.setDisable(true);
         editarButton.setDisable(true);
         eliminarButton.setDisable(true);
         setTextFieldsDisable(true);
 
-        listaItem = MantenimientoItem.consulta(db);
-        itemTableView.setItems(listaItem);
+        // cargar todos los productos en la tabla
+        listaProductos = MantenimientoItem.consulta(db);
+        itemTableView.setItems(listaProductos);
 
-        itemTableView.getSelectionModel().selectedItemProperty().addListener((obs, anterior, seleccionado) -> {
-            if (seleccionado != null) {
+        // habilitar editar y eliminar solo cuando hay una fila seleccionada
+        itemTableView.getSelectionModel().selectedItemProperty().addListener((observable, productoAnterior, productoSeleccionado) -> {
+            if (productoSeleccionado != null) {
                 editarButton.setDisable(false);
                 eliminarButton.setDisable(false);
             } else {
@@ -64,19 +73,22 @@ public class ItemController {
             }
         });
 
-        for (MenuItem item : categoryMenuButton.getItems()) {
-            item.setOnAction(e -> categoryMenuButton.setText(item.getText()));
+        // asignar cada opcion del desplegable de categoria al texto del boton
+        for (MenuItem opcionCategoria : categoryMenuButton.getItems()) {
+            opcionCategoria.setOnAction(evento -> categoryMenuButton.setText(opcionCategoria.getText()));
         }
     }
 
-    private void setTextFieldsDisable(boolean disabled) {
-        nameTextField.setDisable(disabled);
-        descriptionTextField.setDisable(disabled);
-        priceTextField.setDisable(disabled);
-        stockTextField.setDisable(disabled);
-        categoryMenuButton.setDisable(disabled);
+    // habilita o deshabilita todos los campos del formulario
+    private void setTextFieldsDisable(boolean deshabilitado) {
+        nameTextField.setDisable(deshabilitado);
+        descriptionTextField.setDisable(deshabilitado);
+        priceTextField.setDisable(deshabilitado);
+        stockTextField.setDisable(deshabilitado);
+        categoryMenuButton.setDisable(deshabilitado);
     }
 
+    // limpia todos los campos del formulario
     private void limpiarCampos() {
         idTextField.clear();
         nameTextField.clear();
@@ -86,8 +98,10 @@ public class ItemController {
         categoryMenuButton.setText("Category");
     }
 
+    // prepara el formulario para crear un producto nuevo
     @FXML
     public void nuevoButton() {
+        mensajeLabel.setText("");
         limpiarCampos();
         setTextFieldsDisable(false);
         idTextField.setDisable(true);
@@ -99,68 +113,78 @@ public class ItemController {
         mensajeLabel.setText("Rellena los campos y pulsa Guardar.");
     }
 
+    // carga los datos del producto seleccionado en el formulario para editarlo
     @FXML
     public void editarButton() {
-        Item seleccionado = itemTableView.getSelectionModel().getSelectedItem();
-        if (seleccionado == null) {
-            mensajeLabel.setText("No hay ningún item seleccionado.");
-        } else {
-            setTextFieldsDisable(false);
-            idTextField.setText(seleccionado.getIdProduct().toString());
-            idTextField.setDisable(true);
-            nameTextField.setText(seleccionado.getName());
-            descriptionTextField.setText(seleccionado.getDescription());
-            priceTextField.setText(seleccionado.getPrice().toString());
-            stockTextField.setText(seleccionado.getStock().toString());
-            categoryMenuButton.setText(seleccionado.getCategory());
-            guardarButton.setDisable(false);
-            nuevoButton.setDisable(true);
-            editarButton.setDisable(true);
-            eliminarButton.setDisable(true);
+        mensajeLabel.setText("");
+        Item productoSeleccionado = itemTableView.getSelectionModel().getSelectedItem();
+        if (productoSeleccionado == null) {
+            mensajeLabel.setText("No hay ningun producto seleccionado.");
+            return;
         }
+        setTextFieldsDisable(false);
+        idTextField.setText(productoSeleccionado.getIdProduct().toString());
+        idTextField.setDisable(true);
+        nameTextField.setText(productoSeleccionado.getName());
+        descriptionTextField.setText(productoSeleccionado.getDescription());
+        priceTextField.setText(productoSeleccionado.getPrice().toString());
+        stockTextField.setText(productoSeleccionado.getStock().toString());
+        categoryMenuButton.setText(productoSeleccionado.getCategory());
+        guardarButton.setDisable(false);
+        nuevoButton.setDisable(true);
+        editarButton.setDisable(true);
+        eliminarButton.setDisable(true);
     }
 
+    // elimina el producto seleccionado de la base de datos
     @FXML
     public void eliminarButton() {
-        Item seleccionado = itemTableView.getSelectionModel().getSelectedItem();
-        if (seleccionado == null) {
-            mensajeLabel.setText("No hay ningún item seleccionado.");
-        } else {
-            MantenimientoItem.eliminar(db, seleccionado);
-            mensajeLabel.setText("Item eliminado.");
-            listaItem = MantenimientoItem.consulta(db);
-            itemTableView.setItems(listaItem);
-            limpiarCampos();
-            setTextFieldsDisable(true);
-            guardarButton.setDisable(true);
-            nuevoButton.setDisable(false);
+        mensajeLabel.setText("");
+        Item productoSeleccionado = itemTableView.getSelectionModel().getSelectedItem();
+        if (productoSeleccionado == null) {
+            mensajeLabel.setText("No hay ningun producto seleccionado.");
+            return;
         }
+        if (!MantenimientoItem.eliminar(db, productoSeleccionado)) {
+            mensajeLabel.setText("Error al eliminar. El producto puede estar en pedidos existentes.");
+            return;
+        }
+        mensajeLabel.setText("Producto eliminado correctamente.");
+        listaProductos = MantenimientoItem.consulta(db);
+        itemTableView.setItems(listaProductos);
+        limpiarCampos();
+        setTextFieldsDisable(true);
+        guardarButton.setDisable(true);
+        nuevoButton.setDisable(false);
     }
 
+    // valida y guarda el producto nuevo o los cambios del producto editado
     @FXML
     public void guardarButton() {
-        String name = nameTextField.getText().trim();
-        String description = descriptionTextField.getText().trim();
-        String category = categoryMenuButton.getText();
-        Double price;
+        mensajeLabel.setText("");
+        String nombre = nameTextField.getText().trim();
+        String descripcion = descriptionTextField.getText().trim();
+        String categoria = categoryMenuButton.getText();
+        Double precio;
         Integer stock;
 
-        if (name.isEmpty()) {
-            mensajeLabel.setText("El nombre del producto no puede estar vacío.");
+        if (nombre.isEmpty()) {
+            mensajeLabel.setText("El nombre del producto no puede estar vacio.");
             return;
         }
 
-        java.util.List<String> categoriasValidas = java.util.Arrays.asList(
+        // comprobar que la categoria es una de las opciones validas del check constraint
+        List<String> categoriasValidas = Arrays.asList(
                 "Hardware", "Peripherals", "Gaming", "Storage", "Accessories", "Merchandising"
         );
-        if (!categoriasValidas.contains(category)) {
-            mensajeLabel.setText("Selecciona una categoría válida.");
+        if (!categoriasValidas.contains(categoria)) {
+            mensajeLabel.setText("Selecciona una categoria valida del desplegable.");
             return;
         }
 
         try {
-            price = Double.parseDouble(priceTextField.getText());
-            if (price <= 0) {
+            precio = Double.parseDouble(priceTextField.getText());
+            if (precio <= 0) {
                 mensajeLabel.setText("El precio debe ser mayor que 0.");
                 return;
             }
@@ -169,28 +193,34 @@ public class ItemController {
                 mensajeLabel.setText("El stock no puede ser negativo.");
                 return;
             }
-        } catch (NumberFormatException e) {
-            mensajeLabel.setText("Precio y stock deben ser números válidos.");
+        } catch (NumberFormatException excepcion) {
+            mensajeLabel.setText("Precio y stock deben ser numeros validos.");
             return;
         }
 
         if (idTextField.getText().isEmpty()) {
-            Item nuevo = new Item(null, name, description, price, stock, category);
-            if (MantenimientoItem.insertar(db, nuevo)) {
+            // insertar producto nuevo
+            Item nuevoProducto = new Item(null, nombre, descripcion, precio, stock, categoria);
+            if (MantenimientoItem.insertar(db, nuevoProducto)) {
                 mensajeLabel.setText("Producto insertado correctamente.");
             } else {
                 mensajeLabel.setText("Error al insertar. Revisa los datos.");
                 return;
             }
         } else {
+            // actualizar producto existente
             Integer id = Integer.parseInt(idTextField.getText());
-            Item editado = new Item(id, name, description, price, stock, category);
-            MantenimientoItem.guardar(db, editado);
-            mensajeLabel.setText("Producto modificado correctamente.");
+            Item productoEditado = new Item(id, nombre, descripcion, precio, stock, categoria);
+            if (MantenimientoItem.guardar(db, productoEditado)) {
+                mensajeLabel.setText("Producto modificado correctamente.");
+            } else {
+                mensajeLabel.setText("Error al guardar. Revisa los datos.");
+                return;
+            }
         }
 
-        listaItem = MantenimientoItem.consulta(db);
-        itemTableView.setItems(listaItem);
+        listaProductos = MantenimientoItem.consulta(db);
+        itemTableView.setItems(listaProductos);
         limpiarCampos();
         setTextFieldsDisable(true);
         idTextField.setDisable(false);
@@ -198,21 +228,23 @@ public class ItemController {
         nuevoButton.setDisable(false);
     }
 
+    // filtra la tabla por nombre o descripcion del producto
     @FXML
     public void buscarButton() {
-        String textoBuscar = buscarTextField.getText().toLowerCase();
+        mensajeLabel.setText("");
+        String textoBuscar = buscarTextField.getText().toLowerCase().trim();
+        if (textoBuscar.isEmpty()) {
+            itemTableView.setItems(listaProductos);
+            return;
+        }
         ObservableList<Item> listaFiltrada = FXCollections.observableArrayList();
-        for (Item item : listaItem) {
-            if (item.getName().toLowerCase().contains(textoBuscar)
-                    || item.getDescription().toLowerCase().contains(textoBuscar)) {
-                listaFiltrada.add(item);
+        for (Item producto : listaProductos) {
+            if (producto.getName().toLowerCase().contains(textoBuscar)
+                    || producto.getDescription().toLowerCase().contains(textoBuscar)) {
+                listaFiltrada.add(producto);
             }
         }
-        if (textoBuscar.isEmpty()) {
-            itemTableView.setItems(listaItem);
-        } else {
-            itemTableView.setItems(listaFiltrada);
-        }
+        itemTableView.setItems(listaFiltrada);
     }
 
     @FXML

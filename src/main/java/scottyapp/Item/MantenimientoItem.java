@@ -7,6 +7,7 @@ import java.sql.*;
 
 public class MantenimientoItem {
 
+    // abre conexion con la base de datos
     public static Connection conexion() {
         Connection conexion;
         String host = "jdbc:mariadb://localhost:3307/";
@@ -16,7 +17,7 @@ public class MantenimientoItem {
         System.out.println("Conectando...");
         try {
             conexion = DriverManager.getConnection(host + bd, user, psw);
-            System.out.println("Conexión realizada con éxito.");
+            System.out.println("Conexion realizada con exito.");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             throw new RuntimeException(e);
@@ -24,20 +25,21 @@ public class MantenimientoItem {
         return conexion;
     }
 
+    // devuelve todos los productos de la tabla product
     public static ObservableList<Item> consulta(Connection conexion) {
         ObservableList<Item> lista = FXCollections.observableArrayList();
         String query = "SELECT * FROM `PRODUCT`";
         try {
             Statement stmt = conexion.createStatement();
-            ResultSet respuesta = stmt.executeQuery(query);
-            while (respuesta.next()) {
+            ResultSet resultado = stmt.executeQuery(query);
+            while (resultado.next()) {
                 lista.add(new Item(
-                        respuesta.getInt("idProduct"),
-                        respuesta.getString("name"),
-                        respuesta.getString("description"),
-                        respuesta.getDouble("price"),
-                        respuesta.getInt("stock"),
-                        respuesta.getString("category")
+                        resultado.getInt("idProduct"),
+                        resultado.getString("name"),
+                        resultado.getString("description"),
+                        resultado.getDouble("price"),
+                        resultado.getInt("stock"),
+                        resultado.getString("category")
                 ));
             }
         } catch (SQLException e) {
@@ -47,13 +49,14 @@ public class MantenimientoItem {
         return lista;
     }
 
-    public static boolean insertar(Connection conexion, Item item) {
+    // inserta un producto nuevo, devuelve false si hay error
+    public static boolean insertar(Connection conexion, Item producto) {
         String query = "INSERT INTO `PRODUCT` (name, description, price, stock, category) VALUES ('"
-                + item.getName() + "','"
-                + item.getDescription() + "',"
-                + item.getPrice() + ","
-                + item.getStock() + ",'"
-                + item.getCategory() + "')";
+                + producto.getName() + "','"
+                + producto.getDescription() + "',"
+                + producto.getPrice() + ","
+                + producto.getStock() + ",'"
+                + producto.getCategory() + "')";
         try {
             Statement stmt = conexion.createStatement();
             stmt.executeUpdate(query);
@@ -64,30 +67,34 @@ public class MantenimientoItem {
         }
     }
 
-    public static void eliminar(Connection conexion, Item item) {
-        String query = "DELETE FROM `PRODUCT` WHERE idProduct = " + item.getIdProduct();
+    // elimina un producto por su id, devuelve false si hay error
+    public static boolean eliminar(Connection conexion, Item producto) {
+        String query = "DELETE FROM `PRODUCT` WHERE idProduct = " + producto.getIdProduct();
         try {
             Statement stmt = conexion.createStatement();
             stmt.executeUpdate(query);
+            return true;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            throw new RuntimeException(e);
+            return false;
         }
     }
 
-    public static void guardar(Connection conexion, Item item) {
-        String query = "UPDATE `PRODUCT` SET name = '" + item.getName() + "', "
-                + "description = '" + item.getDescription() + "', "
-                + "price = " + item.getPrice() + ", "
-                + "stock = " + item.getStock() + ", "
-                + "category = '" + item.getCategory() + "' "
-                + "WHERE idProduct = " + item.getIdProduct();
+    // actualiza los datos de un producto existente, devuelve false si hay error
+    public static boolean guardar(Connection conexion, Item producto) {
+        String query = "UPDATE `PRODUCT` SET name = '" + producto.getName() + "', "
+                + "description = '" + producto.getDescription() + "', "
+                + "price = " + producto.getPrice() + ", "
+                + "stock = " + producto.getStock() + ", "
+                + "category = '" + producto.getCategory() + "' "
+                + "WHERE idProduct = " + producto.getIdProduct();
         try {
             Statement stmt = conexion.createStatement();
             stmt.executeUpdate(query);
+            return true;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            throw new RuntimeException(e);
+            return false;
         }
     }
 }

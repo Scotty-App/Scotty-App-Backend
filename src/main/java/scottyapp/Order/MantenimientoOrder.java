@@ -7,6 +7,7 @@ import java.sql.*;
 
 public class MantenimientoOrder {
 
+    // abre conexion con la base de datos
     public static Connection conexion() {
         Connection conexion;
         String host = "jdbc:mariadb://localhost:3307/";
@@ -24,20 +25,20 @@ public class MantenimientoOrder {
         return conexion;
     }
 
-    // Consulta todos los pedidos de la base de datos
+    // devuelve todos los pedidos de la tabla order
     public static ObservableList<Order> consulta(Connection conexion) {
         ObservableList<Order> lista = FXCollections.observableArrayList();
         String query = "SELECT * FROM `ORDER`";
         try {
             Statement stmt = conexion.createStatement();
-            ResultSet respuesta = stmt.executeQuery(query);
-            while (respuesta.next()) {
+            ResultSet resultado = stmt.executeQuery(query);
+            while (resultado.next()) {
                 lista.add(new Order(
-                        respuesta.getInt("idOrder"),
-                        respuesta.getString("date"),
-                        respuesta.getDouble("total"),
-                        respuesta.getString("status"),
-                        respuesta.getInt("idUser")
+                        resultado.getInt("idOrder"),
+                        resultado.getString("date"),
+                        resultado.getDouble("total"),
+                        resultado.getString("status"),
+                        resultado.getInt("idUser")
                 ));
             }
         } catch (SQLException e) {
@@ -47,6 +48,7 @@ public class MantenimientoOrder {
         return lista;
     }
 
+    // inserta un pedido nuevo y devuelve el id generado, null si hay error
     public static Integer insertar(Connection conexion, Order pedido) {
         String query = "INSERT INTO `ORDER` (date, total, status, idUser) VALUES ('"
                 + pedido.getDate() + "',"
@@ -56,9 +58,9 @@ public class MantenimientoOrder {
         try {
             Statement stmt = conexion.createStatement();
             stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
-            ResultSet generados = stmt.getGeneratedKeys();
-            if (generados.next()) {
-                return generados.getInt(1);
+            ResultSet idGenerado = stmt.getGeneratedKeys();
+            if (idGenerado.next()) {
+                return idGenerado.getInt(1);
             }
             return null;
         } catch (SQLException e) {
@@ -67,6 +69,7 @@ public class MantenimientoOrder {
         }
     }
 
+    // elimina el pedido y todas sus lineas por cascade manual, devuelve false si hay error
     public static boolean eliminar(Connection conexion, Order pedido) {
         try {
             Statement stmt = conexion.createStatement();
@@ -79,6 +82,7 @@ public class MantenimientoOrder {
         }
     }
 
+    // actualiza los datos de un pedido existente
     public static void guardar(Connection conexion, Order pedido) {
         String query = "UPDATE `ORDER` SET date = '" + pedido.getDate() + "', "
                 + "total = " + pedido.getTotal() + ", "

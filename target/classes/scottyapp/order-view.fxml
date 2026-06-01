@@ -52,7 +52,7 @@
         <Label fx:id="modoLabel" styleClass="mensaje" layoutX="14.0" layoutY="408.0" prefWidth="700.0" text="" />
 
         <Label fx:id="mensajeLabel" styleClass="mensaje" layoutX="14.0" layoutY="760.0" prefHeight="27.0" prefWidth="600.0" text="" />
-        <Button styleClass="btn-back" layoutX="14.0" layoutY="800.0" mnemonicParsing="false" onAction="#volverButton" text="← Volver al menú principal" />
+        <Button styleClass="btn-back" layoutX="14.0" layoutY="800.0" mnemonicParsing="false" onAction="#volverButton" text=" Volver al menú principal" />
 
     </children>
 </AnchorPane>

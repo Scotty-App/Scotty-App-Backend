@@ -5,41 +5,75 @@
 
 <AnchorPane prefHeight="840.0" prefWidth="1150.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scottyapp.OrderDetails.OrderDetailsController">
     <children>
-        <Label fx:id="pedidoLabel" layoutX="14.0" layoutY="10.0" prefHeight="30.0" prefWidth="400.0" text="Detalles del pedido" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1e3a5f;" />
 
-        <TableView fx:id="orderDetailsTableView" prefHeight="250.0" prefWidth="1150.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+        <AnchorPane layoutX="0.0" layoutY="0.0" prefHeight="100.0" prefWidth="1150.0"
+                    style="-fx-background-color: #eff6ff; -fx-border-color: #bfdbfe; -fx-border-width: 0 0 1 0;">
+            <children>
+                <Label text="Pedido #" layoutX="14.0" layoutY="10.0" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1e3a5f;" />
+                <Label fx:id="pedidoIdLabel" layoutX="85.0" layoutY="10.0" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1e3a5f;" text="" />
+                <Label text="Fecha:" layoutX="200.0" layoutY="10.0" style="-fx-text-fill: #475569;" />
+                <Label fx:id="pedidoFechaLabel" layoutX="250.0" layoutY="10.0" style="-fx-text-fill: #1e293b;" text="" />
+                <Label text="Estado:" layoutX="420.0" layoutY="10.0" style="-fx-text-fill: #475569;" />
+                <Label fx:id="pedidoStatusLabel" layoutX="475.0" layoutY="10.0" style="-fx-font-weight: bold;" text="" />
+                <Label text="Total:" layoutX="700.0" layoutY="10.0" style="-fx-text-fill: #475569;" />
+                <Label fx:id="pedidoTotalLabel" layoutX="745.0" layoutY="10.0" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #1e3a5f;" text="" />
+
+                <Label text="Cliente:" layoutX="14.0" layoutY="50.0" style="-fx-text-fill: #475569;" />
+                <Label fx:id="clienteNombreLabel" layoutX="65.0" layoutY="50.0" style="-fx-text-fill: #1e293b;" text="" />
+                <Label text="Email:" layoutX="280.0" layoutY="50.0" style="-fx-text-fill: #475569;" />
+                <Label fx:id="clienteEmailLabel" layoutX="320.0" layoutY="50.0" style="-fx-text-fill: #1e293b;" text="" />
+                <Label text="Direccion:" layoutX="540.0" layoutY="50.0" style="-fx-text-fill: #475569;" />
+                <Label fx:id="clienteDireccionLabel" layoutX="605.0" layoutY="50.0" style="-fx-text-fill: #1e293b;" text="" />
+                <Label text="Telefono:" layoutX="880.0" layoutY="50.0" style="-fx-text-fill: #475569;" />
+                <Label fx:id="clienteTelefonoLabel" layoutX="940.0" layoutY="50.0" style="-fx-text-fill: #1e293b;" text="" />
+            </children>
+        </AnchorPane>
+
+        <Label text="Lineas del pedido:" layoutX="14.0" layoutY="112.0" style="-fx-font-weight: bold; -fx-text-fill: #1e3a5f;" />
+        <Label fx:id="contadorLineasLabel" layoutX="160.0" layoutY="112.0" style="-fx-text-fill: #64748b; -fx-font-style: italic;" text="" />
+        <Label fx:id="bloqueoLabel" layoutX="600.0" layoutY="112.0" style="-fx-text-fill: #dc2626; -fx-font-weight: bold;" text="" />
+
+        <TableView fx:id="orderDetailsTableView" prefHeight="210.0" prefWidth="1150.0" layoutX="0.0" layoutY="132.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <columns>
-                <TableColumn fx:id="idDetailColumn" prefWidth="100.0" text="ID Detalle" />
-                <TableColumn fx:id="quantityColumn" prefWidth="150.0" text="Cantidad" />
-                <TableColumn fx:id="subtotalColumn" prefWidth="150.0" text="Subtotal" />
-                <TableColumn fx:id="idOrderColumn" prefWidth="150.0" text="ID Pedido" />
-                <TableColumn fx:id="idProductColumn" prefWidth="150.0" text="ID Producto" />
+                <TableColumn fx:id="idDetailColumn" prefWidth="90.0" text="ID Linea" />
+                <TableColumn fx:id="nombreProductoColumn" prefWidth="400.0" text="Producto" />
+                <TableColumn fx:id="quantityColumn" prefWidth="120.0" text="Cantidad" />
+                <TableColumn fx:id="subtotalColumn" prefWidth="150.0" text="Subtotal EUR" />
+                <TableColumn fx:id="idProductColumn" prefWidth="100.0" text="ID Prod." />
             </columns>
         </TableView>
 
-        <TextField fx:id="buscarTextField" layoutX="14.0" layoutY="305.0" prefHeight="32.0" prefWidth="280.0" promptText="Buscar" />
-        <Button layoutX="304.0" layoutY="305.0" mnemonicParsing="false" onAction="#buscarButton" prefHeight="32.0" prefWidth="63.0" text="Buscar" />
-        <Button fx:id="nuevoButton" styleClass="btn-primary" layoutX="922.0" layoutY="305.0" mnemonicParsing="false" onAction="#nuevoButton" prefHeight="32.0" prefWidth="82.0" text="Nuevo" />
-        <Button fx:id="editarButton" styleClass="btn-secondary" disable="true" layoutX="600.0" layoutY="305.0" mnemonicParsing="false" onAction="#editarButton" prefHeight="32.0" prefWidth="83.0" text="Editar" />
-        <Button fx:id="eliminarButton" styleClass="btn-danger" disable="true" layoutX="695.0" layoutY="305.0" mnemonicParsing="false" onAction="#eliminarButton" prefHeight="32.0" prefWidth="83.0" text="Eliminar" />
+        <Button fx:id="editarButton" styleClass="btn-secondary" disable="true" layoutX="14.0" layoutY="354.0" mnemonicParsing="false" onAction="#editarButton" prefHeight="32.0" prefWidth="100.0" text="Editar linea" />
+        <Button fx:id="eliminarButton" styleClass="btn-danger" disable="true" layoutX="124.0" layoutY="354.0" mnemonicParsing="false" onAction="#eliminarButton" prefHeight="32.0" prefWidth="110.0" text="Eliminar linea" />
 
-        <TextField fx:id="idDetailTextField" layoutX="14.0" layoutY="355.0" prefHeight="28.0" prefWidth="56.0" promptText="ID" disable="true" />
-        <TextField fx:id="quantityTextField" layoutX="80.0" layoutY="355.0" prefHeight="28.0" prefWidth="100.0" promptText="Cantidad" />
-        <TextField fx:id="subtotalTextField" layoutX="190.0" layoutY="355.0" prefHeight="28.0" prefWidth="100.0" promptText="Subtotal" />
-        <Button fx:id="guardarButton" styleClass="btn-primary" disable="true" layoutX="922.0" layoutY="355.0" mnemonicParsing="false" onAction="#guardarButton" prefHeight="28.0" prefWidth="83.0" text="Guardar" />
+        <Label text="ID Linea:" layoutX="14.0" layoutY="402.0" />
+        <TextField fx:id="idDetailTextField" layoutX="75.0" layoutY="399.0" prefHeight="28.0" prefWidth="55.0" promptText="ID" disable="true" />
+        <Label text="Cantidad:" layoutX="145.0" layoutY="402.0" />
+        <TextField fx:id="quantityTextField" layoutX="210.0" layoutY="399.0" prefHeight="28.0" prefWidth="80.0" promptText="Cant." disable="true" />
+        <Label text="Subtotal EUR:" layoutX="305.0" layoutY="402.0" />
+        <TextField fx:id="subtotalTextField" layoutX="390.0" layoutY="399.0" prefHeight="28.0" prefWidth="100.0" promptText="0.00" disable="true" />
+        <Button fx:id="guardarDetalleButton" styleClass="btn-primary" disable="true" layoutX="510.0" layoutY="397.0" mnemonicParsing="false" onAction="#guardarDetalleButton" prefHeight="32.0" prefWidth="130.0" text="Guardar cambios" />
 
-        <Label text="Productos disponibles:" layoutX="14.0" layoutY="400.0" />
-        <TableView fx:id="productosTableView" prefHeight="200.0" prefWidth="700.0" layoutX="14.0" layoutY="420.0">
+        <Label text="Añadir producto al pedido:" layoutX="14.0" layoutY="448.0" style="-fx-font-weight: bold; -fx-text-fill: #1e3a5f;" />
+
+        <TextField fx:id="buscarTextField" layoutX="250.0" layoutY="445.0" prefHeight="28.0" prefWidth="220.0" promptText="Buscar producto" />
+        <Button layoutX="480.0" layoutY="445.0" mnemonicParsing="false" onAction="#buscarButton" prefHeight="28.0" prefWidth="70.0" text="Buscar" />
+
+        <TableView fx:id="productosTableView" prefHeight="180.0" prefWidth="720.0" layoutX="14.0" layoutY="478.0">
             <columns>
-                <TableColumn fx:id="idProductDisponibleColumn" prefWidth="80.0" text="ID" />
-                <TableColumn fx:id="nameProductColumn" prefWidth="300.0" text="Nombre" />
-                <TableColumn fx:id="priceProductColumn" prefWidth="120.0" text="Precio" />
+                <TableColumn fx:id="idProductDisponibleColumn" prefWidth="70.0" text="ID" />
+                <TableColumn fx:id="nombreProductoDisponibleColumn" prefWidth="350.0" text="Producto" />
+                <TableColumn fx:id="priceProductColumn" prefWidth="150.0" text="Precio EUR" />
+                <TableColumn fx:id="stockDisponibleColumn" prefWidth="110.0" text="Stock" />
             </columns>
         </TableView>
 
-        <Button fx:id="anyadirProductoButton" disable="true" layoutX="730.0" layoutY="420.0" mnemonicParsing="false" onAction="#anyadirProductoButton" prefHeight="32.0" prefWidth="130.0" text="Calcular subtotal" />
+        <Label text="Cantidad:" layoutX="750.0" layoutY="478.0" />
+        <TextField fx:id="cantidadTextField" layoutX="750.0" layoutY="500.0" prefHeight="32.0" prefWidth="80.0" promptText="Cant." />
+        <Button fx:id="anyadirProductoButton" styleClass="btn-primary" disable="true" layoutX="750.0" layoutY="544.0" mnemonicParsing="false" onAction="#anyadirProductoButton" prefHeight="32.0" prefWidth="140.0" text="Añadir al pedido" />
 
-        <Label fx:id="mensajeLabel" styleClass="mensaje" layoutX="14.0" layoutY="635.0" prefHeight="27.0" prefWidth="400.0" text="" />
-        <Button styleClass="btn-back" layoutX="30.0" layoutY="778.0" mnemonicParsing="false" onAction="#volverButton" text="Volver a pedidos" />
+        <Label fx:id="mensajeLabel" styleClass="mensaje" layoutX="14.0" layoutY="675.0" prefHeight="27.0" prefWidth="700.0" text="" />
+        <Button styleClass="btn-back" layoutX="14.0" layoutY="800.0" mnemonicParsing="false" onAction="#volverButton" text="Volver a pedidos" />
+
     </children>
 </AnchorPane>

@@ -48,6 +48,6 @@
         <Button fx:id="guardarButton" styleClass="btn-primary" disable="true" layoutX="922.0" layoutY="507.0" mnemonicParsing="false" onAction="#guardarButton" prefHeight="38.0" prefWidth="83.0" text="Guardar" />
 
         <Label fx:id="mensajeLabel" styleClass="mensaje" layoutX="14.0" layoutY="610.0" prefHeight="27.0" prefWidth="500.0" text="" />
-        <Button styleClass="btn-back" layoutX="14.0" layoutY="778.0" mnemonicParsing="false" onAction="#volverButton" text="← Volver al menú principal" />
+        <Button styleClass="btn-back" layoutX="14.0" layoutY="778.0" mnemonicParsing="false" onAction="#volverButton" text="Volver al menú principal" />
     </children>
 </AnchorPane>

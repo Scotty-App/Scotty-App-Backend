@@ -67,14 +67,15 @@ public class MantenimientoOrder {
         }
     }
 
-    public static void eliminar(Connection conexion, Order pedido) {
-        String query = "DELETE FROM `ORDER` WHERE idOrder = " + pedido.getIdOrder();
+    public static boolean eliminar(Connection conexion, Order pedido) {
         try {
             Statement stmt = conexion.createStatement();
-            stmt.executeUpdate(query);
+            stmt.executeUpdate("DELETE FROM `ORDER_DETAILS` WHERE idOrder = " + pedido.getIdOrder());
+            stmt.executeUpdate("DELETE FROM `ORDER` WHERE idOrder = " + pedido.getIdOrder());
+            return true;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            throw new RuntimeException(e);
+            return false;
         }
     }
 

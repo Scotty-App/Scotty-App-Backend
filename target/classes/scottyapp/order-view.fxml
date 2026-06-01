@@ -17,10 +17,10 @@
 
         <TextField fx:id="buscarTextField" layoutX="14.0" layoutY="295.0" prefHeight="32.0" prefWidth="280.0" promptText="Buscar por estado o usuario" />
         <Button layoutX="304.0" layoutY="295.0" mnemonicParsing="false" onAction="#buscarButton" prefHeight="32.0" prefWidth="63.0" text="Buscar" />
-        <Button fx:id="nuevoButton" layoutX="922.0" layoutY="295.0" mnemonicParsing="false" onAction="#nuevoButton" prefHeight="32.0" prefWidth="82.0" text="Nuevo" />
-        <Button fx:id="verDetallesButton" disable="true" layoutX="800.0" layoutY="295.0" mnemonicParsing="false" onAction="#verDetallesButton" prefHeight="32.0" prefWidth="110.0" text="Ver detalles" />
-        <Button fx:id="editarButton" disable="true" layoutX="600.0" layoutY="295.0" mnemonicParsing="false" onAction="#editarButton" prefHeight="32.0" prefWidth="83.0" text="Editar" />
-        <Button fx:id="eliminarButton" disable="true" layoutX="695.0" layoutY="295.0" mnemonicParsing="false" onAction="#eliminarButton" prefHeight="32.0" prefWidth="83.0" text="Eliminar" textFill="#f40000" />
+        <Button fx:id="nuevoButton" styleClass="btn-primary" layoutX="922.0" layoutY="295.0" mnemonicParsing="false" onAction="#nuevoButton" prefHeight="32.0" prefWidth="82.0" text="Nuevo" />
+        <Button fx:id="verDetallesButton" styleClass="btn-secondary" disable="true" layoutX="800.0" layoutY="295.0" mnemonicParsing="false" onAction="#verDetallesButton" prefHeight="32.0" prefWidth="110.0" text="Ver detalles" />
+        <Button fx:id="editarButton" styleClass="btn-secondary" disable="true" layoutX="600.0" layoutY="295.0" mnemonicParsing="false" onAction="#editarButton" prefHeight="32.0" prefWidth="83.0" text="Editar" />
+        <Button fx:id="eliminarButton" styleClass="btn-danger" disable="true" layoutX="695.0" layoutY="295.0" mnemonicParsing="false" onAction="#eliminarButton" prefHeight="32.0" prefWidth="83.0" text="Eliminar" />
 
         <TextField fx:id="idOrderTextField" layoutX="14.0" layoutY="345.0" prefHeight="28.0" prefWidth="56.0" promptText="ID" disable="true" />
         <TextField fx:id="dateTextField" layoutX="80.0" layoutY="345.0" prefHeight="28.0" prefWidth="150.0" promptText="Fecha" />
@@ -33,7 +33,7 @@
             </items>
         </SplitMenuButton>
         <TextField fx:id="totalTextField" layoutX="590.0" layoutY="345.0" prefHeight="28.0" prefWidth="100.0" promptText="Total" />
-        <Button fx:id="guardarButton" disable="true" layoutX="922.0" layoutY="345.0" mnemonicParsing="false" onAction="#guardarButton" prefHeight="28.0" prefWidth="83.0" text="Guardar" />
+        <Button fx:id="guardarButton" styleClass="btn-primary" disable="true" layoutX="922.0" layoutY="345.0" mnemonicParsing="false" onAction="#guardarButton" prefHeight="28.0" prefWidth="83.0" text="Guardar" />
 
         <Label text="Productos disponibles:" layoutX="14.0" layoutY="390.0" />
         <TableView fx:id="productosTableView" prefHeight="200.0" prefWidth="700.0" layoutX="14.0" layoutY="410.0">
@@ -48,7 +48,7 @@
         <TextField fx:id="cantidadTextField" layoutX="730.0" layoutY="430.0" prefHeight="28.0" prefWidth="80.0" promptText="Cant." />
         <Button fx:id="anyadirProductoButton" disable="true" layoutX="730.0" layoutY="470.0" mnemonicParsing="false" onAction="#anyadirProductoButton" prefHeight="32.0" prefWidth="130.0" text="Anyadir producto" />
 
-        <Label fx:id="mensajeLabel" layoutX="14.0" layoutY="625.0" prefHeight="27.0" prefWidth="400.0" text="" />
-        <Button layoutX="30.0" layoutY="778.0" mnemonicParsing="false" onAction="#volverButton" text="&lt;-- Volver al menu principal" />
+        <Label fx:id="mensajeLabel" styleClass="mensaje" layoutX="14.0" layoutY="625.0" prefHeight="27.0" prefWidth="400.0" text="" />
+        <Button styleClass="btn-back" layoutX="30.0" layoutY="778.0" mnemonicParsing="false" onAction="#volverButton" text="&lt;-- Volver al menu principal" />
     </children>
 </AnchorPane>

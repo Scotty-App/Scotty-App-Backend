@@ -8,11 +8,16 @@ import javafx.scene.control.*;
 import java.io.IOException;
 import java.sql.Connection;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import scottyapp.Usuario.Usuario;
 import scottyapp.Usuario.MantenimientoUsuario;
 import scottyapp.Item.Item;
 import scottyapp.Item.MantenimientoItem;
+import scottyapp.OrderDetails.OrderDetails;
+import scottyapp.OrderDetails.MantenimientoOrderDetails;
 
 public class OrderController {
 
@@ -20,6 +25,7 @@ public class OrderController {
     private ObservableList<Order> listaOrders;
     private ObservableList<Usuario> listaUsuarios;
     private ObservableList<Item> listaItems;
+    private List<OrderDetails> detallesPendientes = new ArrayList<>();
 
     @FXML public TableView<Order> orderTableView;
     @FXML public TableColumn<Order, Integer> idOrderColumn;
@@ -140,6 +146,7 @@ public class OrderController {
     @FXML
     public void nuevoButton() {
         limpiarCampos();
+        detallesPendientes.clear();
         setFormDisable(false);
         idOrderTextField.setDisable(true);
         // La fecha se pone automaticamente con la fecha de hoy
@@ -175,8 +182,9 @@ public class OrderController {
             }
             Double subtotal = productoSeleccionado.getPrice() * cantidad;
             Double totalActual = totalTextField.getText().isEmpty() ? 0.0 : Double.parseDouble(totalTextField.getText());
-            totalTextField.setText(String.format("%.2f", totalActual + subtotal));
-            mensajeLabel.setText("Anyadido: " + productoSeleccionado.getName() + " x" + cantidad + " = " + String.format("%.2f", subtotal));
+            totalTextField.setText(String.format(Locale.US, "%.2f", totalActual + subtotal));
+            detallesPendientes.add(new OrderDetails(null, cantidad, subtotal, null, productoSeleccionado.getIdProduct()));
+            mensajeLabel.setText("Anyadido: " + productoSeleccionado.getName() + " x" + cantidad + " = " + String.format(Locale.US, "%.2f", subtotal));
             cantidadTextField.clear();
             cantidadTextField.requestFocus();
         } catch (NumberFormatException e) {
@@ -190,6 +198,7 @@ public class OrderController {
         if (pedidoSeleccionado == null) {
             mensajeLabel.setText("No hay ningun pedido seleccionado.");
         } else {
+            detallesPendientes.clear();
             setFormDisable(false);
             idOrderTextField.setText(pedidoSeleccionado.getIdOrder().toString());
             idOrderTextField.setDisable(true);
@@ -251,7 +260,13 @@ public class OrderController {
 
         if (idOrderTextField.getText().isEmpty()) {
             Order nuevoPedido = new Order(null, date, total, status, idUser);
-            if (MantenimientoOrder.insertar(db, nuevoPedido)) {
+            Integer idGenerado = MantenimientoOrder.insertar(db, nuevoPedido);
+            if (idGenerado != null) {
+                for (OrderDetails detalle : detallesPendientes) {
+                    OrderDetails detalleCompleto = new OrderDetails(null, detalle.getQuantity(), detalle.getSubtotal(), idGenerado, detalle.getIdProduct());
+                    MantenimientoOrderDetails.insertar(db, detalleCompleto);
+                }
+                detallesPendientes.clear();
                 mensajeLabel.setText("Pedido insertado.");
             } else {
                 mensajeLabel.setText("Error al insertar. Revisa los datos.");
@@ -261,6 +276,11 @@ public class OrderController {
             Integer id = Integer.parseInt(idOrderTextField.getText());
             Order pedidoEditado = new Order(id, date, total, status, idUser);
             MantenimientoOrder.guardar(db, pedidoEditado);
+            for (OrderDetails detalle : detallesPendientes) {
+                OrderDetails detalleCompleto = new OrderDetails(null, detalle.getQuantity(), detalle.getSubtotal(), id, detalle.getIdProduct());
+                MantenimientoOrderDetails.insertar(db, detalleCompleto);
+            }
+            detallesPendientes.clear();
             mensajeLabel.setText("Pedido modificado.");
         }
 

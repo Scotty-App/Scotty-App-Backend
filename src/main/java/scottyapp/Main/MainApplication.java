@@ -16,9 +16,9 @@ public class MainApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("/scottyapp/main-view.fxml"));
         scene = new Scene(fxmlLoader.load(), 1150, 840);
+        scene.getStylesheets().add(MainApplication.class.getResource("/scottyapp/style.css").toExternalForm());
         stage.setTitle("Gestor de Tablas - ScottyApp");
         stage.setScene(scene);
-        stage.setMaximized(true);
         stage.show();
     }
 

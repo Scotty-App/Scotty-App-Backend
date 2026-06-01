@@ -47,7 +47,7 @@ public class MantenimientoOrder {
         return lista;
     }
 
-    public static boolean insertar(Connection conexion, Order pedido) {
+    public static Integer insertar(Connection conexion, Order pedido) {
         String query = "INSERT INTO `ORDER` (date, total, status, idUser) VALUES ('"
                 + pedido.getDate() + "',"
                 + pedido.getTotal() + ",'"
@@ -55,11 +55,15 @@ public class MantenimientoOrder {
                 + pedido.getIdUser() + ")";
         try {
             Statement stmt = conexion.createStatement();
-            stmt.executeUpdate(query);
-            return true;
+            stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
+            ResultSet generados = stmt.getGeneratedKeys();
+            if (generados.next()) {
+                return generados.getInt(1);
+            }
+            return null;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return false;
+            return null;
         }
     }
 
@@ -75,8 +79,10 @@ public class MantenimientoOrder {
     }
 
     public static void guardar(Connection conexion, Order pedido) {
-        String query = "UPDATE `ORDER` SET status = '" + pedido.getStatus() + "', "
-                + "total = " + pedido.getTotal() + " "
+        String query = "UPDATE `ORDER` SET date = '" + pedido.getDate() + "', "
+                + "total = " + pedido.getTotal() + ", "
+                + "status = '" + pedido.getStatus() + "', "
+                + "idUser = " + pedido.getIdUser() + " "
                 + "WHERE idOrder = " + pedido.getIdOrder();
         try {
             Statement stmt = conexion.createStatement();

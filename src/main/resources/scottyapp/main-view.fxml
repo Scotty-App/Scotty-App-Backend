@@ -23,7 +23,7 @@
    </Label>
    <ComboBox fx:id="menuOpcionComboBox" prefHeight="27.0" prefWidth="251.0" promptText=" Selecciona una acción" />
 
-    <Button fx:id="irButton" onAction="#irButton" prefHeight="39.0" prefWidth="114.0" text="Acceder" textAlignment="CENTER">
+    <Button fx:id="irButton" styleClass="btn-primary" onAction="#irButton" prefHeight="39.0" prefWidth="114.0" text="Acceder" textAlignment="CENTER">
         <font>
             <Font size="18.0" />
         </font>

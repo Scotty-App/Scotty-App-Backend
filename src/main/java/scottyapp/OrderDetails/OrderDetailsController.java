@@ -1,6 +1,8 @@
 package scottyapp.OrderDetails;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import java.util.Locale;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -31,6 +33,7 @@ public class OrderDetailsController {
     @FXML public TextField idDetailTextField;
     @FXML public TextField quantityTextField;
     @FXML public TextField subtotalTextField;
+    @FXML public TextField buscarTextField;
 
     @FXML public Label pedidoLabel;
     @FXML public Label mensajeLabel;
@@ -135,7 +138,7 @@ public class OrderDetailsController {
         try {
             Integer cantidad = Integer.parseInt(cantidadTexto);
             Double subtotal = productoSeleccionado.getPrice() * cantidad;
-            subtotalTextField.setText(String.format("%.2f", subtotal));
+            subtotalTextField.setText(String.format(Locale.US, "%.2f", subtotal));
             mensajeLabel.setText("Producto: " + productoSeleccionado.getName() + " x" + cantidad + " = " + subtotal);
         } catch (NumberFormatException e) {
             mensajeLabel.setText("La cantidad debe ser un numero entero.");
@@ -224,6 +227,23 @@ public class OrderDetailsController {
         idDetailTextField.setDisable(false);
         guardarButton.setDisable(true);
         nuevoButton.setDisable(false);
+    }
+
+    @FXML
+    public void buscarButton() {
+        String textoBuscar = buscarTextField.getText().toLowerCase();
+        ObservableList<OrderDetails> listaFiltrada = FXCollections.observableArrayList();
+        for (OrderDetails detalle : listaDetalles) {
+            if (detalle.getIdProduct().toString().contains(textoBuscar)
+                    || detalle.getQuantity().toString().contains(textoBuscar)) {
+                listaFiltrada.add(detalle);
+            }
+        }
+        if (textoBuscar.isEmpty()) {
+            orderDetailsTableView.setItems(listaDetalles);
+        } else {
+            orderDetailsTableView.setItems(listaFiltrada);
+        }
     }
 
     @FXML

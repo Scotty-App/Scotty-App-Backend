@@ -7,39 +7,47 @@
     <children>
         <TableView fx:id="usuarioTableView" prefHeight="400.0" prefWidth="1150.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <columns>
-                <TableColumn fx:id="idUserColumn" prefWidth="80.0" text="idUser" />
-                <TableColumn fx:id="nameColumn" prefWidth="259.26085662841797" text="Name" />
-                <TableColumn fx:id="emailColumn" prefWidth="172.26092529296875" text="Email" />
-                <TableColumn fx:id="passwordColumn" minWidth="0.0" prefWidth="94.86956787109375" text="Password" />
-                <TableColumn fx:id="roleColumn" prefWidth="142.54779052734375" text="Role" />
-                <TableColumn fx:id="addressColumn" prefWidth="248.96527099609375" text="Address" />
-                <TableColumn fx:id="phoneColumn" prefWidth="155.05218505859375" text="Phone" />
+                <TableColumn fx:id="idUserColumn" prefWidth="80.0" text="ID" />
+                <TableColumn fx:id="nameColumn" prefWidth="200.0" text="Nombre" />
+                <TableColumn fx:id="emailColumn" prefWidth="220.0" text="Email" />
+                <TableColumn fx:id="passwordColumn" prefWidth="120.0" text="Password" />
+                <TableColumn fx:id="roleColumn" prefWidth="120.0" text="Rol" />
+                <TableColumn fx:id="addressColumn" prefWidth="260.0" text="Dirección" />
+                <TableColumn fx:id="phoneColumn" prefWidth="120.0" text="Teléfono" />
             </columns>
         </TableView>
 
-        <TextField fx:id="idTextField" layoutX="163.0" layoutY="495.0" prefHeight="28.0" prefWidth="56.0" promptText="Id" />
-        <SplitMenuButton fx:id="roleMenuButton" layoutX="660.0" layoutY="495.0" prefHeight="28.0" prefWidth="131.0" text="Role">
+        <TextField fx:id="buscarTextField" layoutX="14.0" layoutY="415.0" prefHeight="32.0" prefWidth="280.0" promptText="Buscar por nombre o email" />
+        <Button layoutX="304.0" layoutY="415.0" mnemonicParsing="false" onAction="#buscarButton" prefHeight="32.0" prefWidth="70.0" text="Buscar" />
+        <Button fx:id="nuevoButton" styleClass="btn-primary" layoutX="922.0" layoutY="415.0" mnemonicParsing="false" onAction="#nuevoButton" prefHeight="32.0" prefWidth="82.0" text="Nuevo" />
+        <Button fx:id="editarButton" styleClass="btn-secondary" disable="true" layoutX="700.0" layoutY="415.0" mnemonicParsing="false" onAction="#editarButton" prefHeight="32.0" prefWidth="83.0" text="Editar" />
+        <Button fx:id="eliminarButton" styleClass="btn-danger" disable="true" layoutX="795.0" layoutY="415.0" mnemonicParsing="false" onAction="#eliminarButton" prefHeight="32.0" prefWidth="83.0" text="Eliminar" />
+
+        <Label text="ID:" layoutX="14.0" layoutY="463.0" />
+        <TextField fx:id="idTextField" layoutX="40.0" layoutY="460.0" prefHeight="28.0" prefWidth="60.0" promptText="ID" disable="true" />
+        <Label text="Nombre:" layoutX="115.0" layoutY="463.0" />
+        <TextField fx:id="nameTextField" layoutX="175.0" layoutY="460.0" prefHeight="28.0" prefWidth="220.0" promptText="Nombre" />
+        <Label text="Email:" layoutX="410.0" layoutY="463.0" />
+        <TextField fx:id="emailTextField" layoutX="455.0" layoutY="460.0" prefHeight="28.0" prefWidth="250.0" promptText="Email" />
+        <Label text="Rol:" layoutX="720.0" layoutY="463.0" />
+        <SplitMenuButton fx:id="roleMenuButton" layoutX="750.0" layoutY="458.0" prefHeight="28.0" prefWidth="150.0" text="Role">
             <items>
                 <MenuItem mnemonicParsing="false" text="ALUMNI" />
                 <MenuItem mnemonicParsing="false" text="ADMINISTRATOR" />
             </items>
         </SplitMenuButton>
-        <TextField fx:id="buscarTextField" layoutX="332.0" layoutY="424.0" prefHeight="38.0" prefWidth="328.0" promptText="Buscar" />
-        <Button layoutX="679.0" layoutY="424.0" mnemonicParsing="false" onAction="#buscarButton" prefHeight="38.0" prefWidth="63.0" text="Buscar" />
-        <Button fx:id="nuevoButton" styleClass="btn-primary" layoutX="922.0" layoutY="462.0" mnemonicParsing="false" onAction="#nuevoButton" prefHeight="38.0" prefWidth="82.0" text="Nuevo" />
 
-        <TextField fx:id="nameTextField" layoutX="259.0" layoutY="495.0" prefHeight="28.0" prefWidth="296.0" promptText="Name" />
-        <TextField fx:id="passwordTextField" layoutX="259.0" layoutY="545.0" prefHeight="27.0" prefWidth="171.0" promptText="Password" />
-        <Button fx:id="editarButton" styleClass="btn-secondary" disable="true" layoutX="922.0" layoutY="526.0" mnemonicParsing="false" onAction="#editarButton" prefHeight="38.0" prefWidth="83.0" text="Editar" />
-        <Button fx:id="eliminarButton" styleClass="btn-danger" disable="true" layoutX="922.0" layoutY="597.0" mnemonicParsing="false" onAction="#eliminarButton" prefHeight="38.0" prefWidth="83.0" text="Eliminar" />
+        <Label text="Password:" layoutX="14.0" layoutY="510.0" />
+        <TextField fx:id="passwordTextField" layoutX="80.0" layoutY="507.0" prefHeight="28.0" prefWidth="180.0" promptText="Password" />
+        <Label text="Teléfono:" layoutX="275.0" layoutY="510.0" />
+        <TextField fx:id="phoneTextField" layoutX="340.0" layoutY="507.0" prefHeight="28.0" prefWidth="120.0" promptText="9 dígitos" />
 
-        <TextField fx:id="emailTextField" layoutX="259.0" layoutY="602.0" prefHeight="28.0" prefWidth="296.0" promptText="Email" />
-        <TextField fx:id="phoneTextField" layoutX="660.0" layoutY="602.0" prefHeight="27.0" prefWidth="171.0" promptText="Phone" />
-        <Label fx:id="mensajeLabel" styleClass="mensaje" layoutX="399.0" layoutY="739.0" prefHeight="27.0" prefWidth="193.0" text="" />
+        <Label text="Dirección:" layoutX="14.0" layoutY="558.0" />
+        <TextField fx:id="addressTextField" layoutX="80.0" layoutY="555.0" prefHeight="28.0" prefWidth="730.0" promptText="Dirección completa" />
 
-        <TextField fx:id="addressTextField" layoutX="259.0" layoutY="660.0" prefHeight="48.0" prefWidth="573.0" promptText="Address" />
-        <Button fx:id="guardarButton" styleClass="btn-primary" disable="true" layoutX="922.0" layoutY="665.0" mnemonicParsing="false" onAction="#guardarButton" prefHeight="38.0" prefWidth="83.0" text="Guardar" />
+        <Button fx:id="guardarButton" styleClass="btn-primary" disable="true" layoutX="922.0" layoutY="507.0" mnemonicParsing="false" onAction="#guardarButton" prefHeight="38.0" prefWidth="83.0" text="Guardar" />
 
-        <Button styleClass="btn-back" layoutX="30.0" layoutY="778.0" mnemonicParsing="false" onAction="#volverButton" text="&lt;-- Volver al menú principal" />
+        <Label fx:id="mensajeLabel" styleClass="mensaje" layoutX="14.0" layoutY="610.0" prefHeight="27.0" prefWidth="500.0" text="" />
+        <Button styleClass="btn-back" layoutX="14.0" layoutY="778.0" mnemonicParsing="false" onAction="#volverButton" text="← Volver al menú principal" />
     </children>
 </AnchorPane>

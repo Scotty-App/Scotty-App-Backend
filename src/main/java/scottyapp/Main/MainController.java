@@ -13,7 +13,7 @@ public class MainController {
 
     @FXML
     public void initialize() {
-        menuOpcionComboBox.getItems().addAll("Usuario", "Productos", "Pedido", "DetallesPedido");
+        menuOpcionComboBox.getItems().addAll("Usuario", "Productos", "Pedido");
     }
 
     @FXML
@@ -31,9 +31,6 @@ public class MainController {
                         break;
                     case "Pedido":
                         MainApplication.setRoot("order-view");
-                        break;
-                    case "DetallesPedido":
-                        MainApplication.setRoot("orderDetails-view");
                         break;
                 }
             } catch (IOException e) {

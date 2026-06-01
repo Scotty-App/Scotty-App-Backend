@@ -77,20 +77,37 @@ public class MantenimientoUsuario {
         }
     }
 
-    public static void guardar(Connection conexion, Usuario usuario) {
-        String query = "UPDATE `user` SET name = '" + usuario.getName() + "', "
+//    public static void guardar(Connection conexion, Usuario usuario) {
+//        String query = "UPDATE `user` SET name = '" + usuario.getName() + "', "
+//                + "email = '" + usuario.getEmail() + "', "
+//                + "password = '" + usuario.getPassword() + "', "
+//                + "role = '" + usuario.getRole() + "', "
+//                + "address = '" + usuario.getAddress() + "', "
+//                + "phone = '" + usuario.getPhone() + "' "
+//                + "WHERE idUser = " + usuario.getIdUser();
+//        try {
+//            Statement stmt = conexion.createStatement();
+//            stmt.executeUpdate(query);
+//        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//            throw new RuntimeException(e);
+//        }
+//    }
+    public static boolean guardar(Connection conexion, Usuario usuario) {
+        String query = "UPDATE `USER` SET name = '" + usuario.getName() + "', "
                 + "email = '" + usuario.getEmail() + "', "
                 + "password = '" + usuario.getPassword() + "', "
                 + "role = '" + usuario.getRole() + "', "
                 + "address = '" + usuario.getAddress() + "', "
-                + "phone = '" + usuario.getPhone() + "' "
+                + "phone = " + (usuario.getPhone() == null ? "NULL" : "'" + usuario.getPhone() + "'") + " "
                 + "WHERE idUser = " + usuario.getIdUser();
         try {
             Statement stmt = conexion.createStatement();
             stmt.executeUpdate(query);
+            return true;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            throw new RuntimeException(e);
+            return false;
         }
     }
 }

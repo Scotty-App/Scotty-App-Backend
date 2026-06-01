@@ -139,24 +139,45 @@ public class ItemController {
 
     @FXML
     public void guardarButton() {
-        String name = nameTextField.getText();
-        String description = descriptionTextField.getText();
+        String name = nameTextField.getText().trim();
+        String description = descriptionTextField.getText().trim();
         String category = categoryMenuButton.getText();
         Double price;
         Integer stock;
 
+        if (name.isEmpty()) {
+            mensajeLabel.setText("El nombre del producto no puede estar vacío.");
+            return;
+        }
+
+        java.util.List<String> categoriasValidas = java.util.Arrays.asList(
+                "Hardware", "Peripherals", "Gaming", "Storage", "Accessories", "Merchandising"
+        );
+        if (!categoriasValidas.contains(category)) {
+            mensajeLabel.setText("Selecciona una categoría válida.");
+            return;
+        }
+
         try {
             price = Double.parseDouble(priceTextField.getText());
+            if (price <= 0) {
+                mensajeLabel.setText("El precio debe ser mayor que 0.");
+                return;
+            }
             stock = Integer.parseInt(stockTextField.getText());
+            if (stock < 0) {
+                mensajeLabel.setText("El stock no puede ser negativo.");
+                return;
+            }
         } catch (NumberFormatException e) {
-            mensajeLabel.setText("Precio y stock deben ser números.");
+            mensajeLabel.setText("Precio y stock deben ser números válidos.");
             return;
         }
 
         if (idTextField.getText().isEmpty()) {
             Item nuevo = new Item(null, name, description, price, stock, category);
             if (MantenimientoItem.insertar(db, nuevo)) {
-                mensajeLabel.setText("Item insertado.");
+                mensajeLabel.setText("Producto insertado correctamente.");
             } else {
                 mensajeLabel.setText("Error al insertar. Revisa los datos.");
                 return;
@@ -165,7 +186,7 @@ public class ItemController {
             Integer id = Integer.parseInt(idTextField.getText());
             Item editado = new Item(id, name, description, price, stock, category);
             MantenimientoItem.guardar(db, editado);
-            mensajeLabel.setText("Item modificado.");
+            mensajeLabel.setText("Producto modificado correctamente.");
         }
 
         listaItem = MantenimientoItem.consulta(db);

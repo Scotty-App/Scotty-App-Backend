@@ -90,6 +90,30 @@ public class UsuarioController {
         roleMenuButton.setText("Role");
     }
 
+    private boolean validarCampos(String name, String email, String password, String role, String phone) {
+        if (name.isEmpty()) {
+            mensajeLabel.setText("El nombre no puede estar vacío.");
+            return false;
+        }
+        if (email.isEmpty() || !email.contains("@") || !email.contains(".")) {
+            mensajeLabel.setText("El email no tiene un formato válido.");
+            return false;
+        }
+        if (password.isEmpty()) {
+            mensajeLabel.setText("La contraseña no puede estar vacía.");
+            return false;
+        }
+        if (!role.equals("ALUMNI") && !role.equals("ADMINISTRATOR")) {
+            mensajeLabel.setText("Selecciona un rol válido: ALUMNI o ADMINISTRATOR.");
+            return false;
+        }
+        if (!phone.isEmpty() && !phone.matches("^[0-9]{9}$")) {
+            mensajeLabel.setText("El teléfono debe tener exactamente 9 dígitos numéricos.");
+            return false;
+        }
+        return true;
+    }
+
     @FXML
     public void nuevoButton() {
         limpiarCampos();
@@ -116,8 +140,8 @@ public class UsuarioController {
             emailTextField.setText(seleccionado.getEmail());
             passwordTextField.setText(seleccionado.getPassword());
             roleMenuButton.setText(seleccionado.getRole());
-            addressTextField.setText(seleccionado.getAddress());
-            phoneTextField.setText(seleccionado.getPhone());
+            addressTextField.setText(seleccionado.getAddress() != null ? seleccionado.getAddress() : "");
+            phoneTextField.setText(seleccionado.getPhone() != null ? seleccionado.getPhone() : "");
             guardarButton.setDisable(false);
             nuevoButton.setDisable(true);
             editarButton.setDisable(true);
@@ -144,26 +168,34 @@ public class UsuarioController {
 
     @FXML
     public void guardarButton() {
-        String name = nameTextField.getText();
-        String email = emailTextField.getText();
-        String password = passwordTextField.getText();
+        String name = nameTextField.getText().trim();
+        String email = emailTextField.getText().trim();
+        String password = passwordTextField.getText().trim();
         String role = roleMenuButton.getText();
-        String address = addressTextField.getText();
-        String phone = phoneTextField.getText();
+        String address = addressTextField.getText().trim();
+        String phone = phoneTextField.getText().trim();
+
+        if (!validarCampos(name, email, password, role, phone)) {
+            return;
+        }
 
         if (idTextField.getText().isEmpty()) {
-            Usuario nuevo = new Usuario(null, name, email, password, role, address, phone);
+            Usuario nuevo = new Usuario(null, name, email, password, role, address, phone.isEmpty() ? null : phone);
             if (MantenimientoUsuario.insertar(db, nuevo)) {
-                mensajeLabel.setText("Usuario insertado.");
+                mensajeLabel.setText("Usuario insertado correctamente.");
             } else {
-                mensajeLabel.setText("Error al insertar. Revisa los datos.");
+                mensajeLabel.setText("Error al insertar. El email ya existe o los datos son incorrectos.");
                 return;
             }
         } else {
             Integer id = Integer.parseInt(idTextField.getText());
-            Usuario editado = new Usuario(id, name, email, password, role, address, phone);
-            MantenimientoUsuario.guardar(db, editado);
-            mensajeLabel.setText("Usuario modificado.");
+            Usuario editado = new Usuario(id, name, email, password, role, address, phone.isEmpty() ? null : phone);
+            if (MantenimientoUsuario.guardar(db, editado)) {
+                mensajeLabel.setText("Usuario modificado correctamente.");
+            } else {
+                mensajeLabel.setText("Error al guardar. El email ya existe o los datos son incorrectos.");
+                return;
+            }
         }
 
         listaUsuarios = MantenimientoUsuario.consulta(db);

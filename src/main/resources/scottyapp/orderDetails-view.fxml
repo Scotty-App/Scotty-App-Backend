@@ -40,6 +40,6 @@
         <Button fx:id="anyadirProductoButton" disable="true" layoutX="730.0" layoutY="420.0" mnemonicParsing="false" onAction="#anyadirProductoButton" prefHeight="32.0" prefWidth="130.0" text="Calcular subtotal" />
 
         <Label fx:id="mensajeLabel" styleClass="mensaje" layoutX="14.0" layoutY="635.0" prefHeight="27.0" prefWidth="400.0" text="" />
-        <Button styleClass="btn-back" layoutX="30.0" layoutY="778.0" mnemonicParsing="false" onAction="#volverButton" text="&lt;-- Volver a pedidos" />
+        <Button styleClass="btn-back" layoutX="30.0" layoutY="778.0" mnemonicParsing="false" onAction="#volverButton" text="Volver a pedidos" />
     </children>
 </AnchorPane>

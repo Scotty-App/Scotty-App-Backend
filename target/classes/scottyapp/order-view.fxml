@@ -6,18 +6,11 @@
 <AnchorPane prefHeight="840.0" prefWidth="1150.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scottyapp.Order.OrderController">
     <children>
 
-        <Label fx:id="contadorTotalLabel" layoutX="14.0" layoutY="8.0" prefWidth="160.0" text="Total: 0" />
-        <Label fx:id="contadorPendingLabel" layoutX="184.0" layoutY="8.0" prefWidth="160.0" style="-fx-text-fill: #d97706;" text="Pendientes: 0" />
-        <Label fx:id="contadorProcessedLabel" layoutX="354.0" layoutY="8.0" prefWidth="160.0" style="-fx-text-fill: #16a34a;" text="Procesados: 0" />
-        <Label fx:id="contadorCancelledLabel" layoutX="524.0" layoutY="8.0" prefWidth="160.0" style="-fx-text-fill: #6b7280;" text="Cancelados: 0" />
-
-        <ComboBox fx:id="filtroStatusComboBox" layoutX="780.0" layoutY="4.0" prefHeight="28.0" prefWidth="180.0" promptText="Filtrar por estado" onAction="#filtrarPorStatus" />
-
-        <TableView fx:id="orderTableView" prefHeight="270.0" prefWidth="1150.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+        <TableView fx:id="orderTableView" prefHeight="300.0" prefWidth="1150.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <columns>
                 <TableColumn fx:id="idOrderColumn" prefWidth="90.0" text="ID Pedido" />
                 <TableColumn fx:id="dateColumn" prefWidth="150.0" text="Fecha" />
-                <TableColumn fx:id="totalColumn" prefWidth="120.0" text="Total €" />
+                <TableColumn fx:id="totalColumn" prefWidth="120.0" text="Total EUR" />
                 <TableColumn fx:id="statusColumn" prefWidth="150.0" text="Estado" />
                 <TableColumn fx:id="idUserColumn" prefWidth="90.0" text="ID Usuario" />
                 <TableColumn fx:id="userNameColumn" prefWidth="300.0" text="Cliente" />
@@ -29,7 +22,7 @@
         <Button fx:id="nuevoButton" styleClass="btn-primary" layoutX="1014.0" layoutY="314.0" mnemonicParsing="false" onAction="#nuevoButton" prefHeight="32.0" prefWidth="120.0" text="Nuevo pedido" />
         <Button fx:id="editarButton" styleClass="btn-secondary" disable="true" layoutX="680.0" layoutY="314.0" mnemonicParsing="false" onAction="#editarButton" prefHeight="32.0" prefWidth="110.0" text="Editar estado" />
         <Button fx:id="eliminarButton" styleClass="btn-danger" disable="true" layoutX="800.0" layoutY="314.0" mnemonicParsing="false" onAction="#eliminarButton" prefHeight="32.0" prefWidth="90.0" text="Eliminar" />
-        <Button fx:id="verDetallesButton" styleClass="btn-secondary" disable="true" layoutX="900.0" layoutY="314.0" mnemonicParsing="false" onAction="#verDetallesButton" prefHeight="32.0" prefWidth="104.0" text="Ver detalles →" />
+        <Button fx:id="verDetallesButton" styleClass="btn-secondary" disable="true" layoutX="900.0" layoutY="314.0" mnemonicParsing="false" onAction="#verDetallesButton" prefHeight="32.0" prefWidth="104.0" text="Ver detalles" />
 
         <Label text="ID:" layoutX="14.0" layoutY="365.0" />
         <TextField fx:id="idOrderTextField" layoutX="35.0" layoutY="362.0" prefHeight="28.0" prefWidth="55.0" promptText="ID" disable="true" />
@@ -45,14 +38,14 @@
                 <MenuItem mnemonicParsing="false" text="CANCELLED" />
             </items>
         </SplitMenuButton>
-        <Label text="Total €:" layoutX="790.0" layoutY="365.0" />
-        <TextField fx:id="totalTextField" layoutX="843.0" layoutY="362.0" prefHeight="28.0" prefWidth="100.0" promptText="0.00" disable="true" />
+        <Label text="Total EUR:" layoutX="790.0" layoutY="365.0" />
+        <TextField fx:id="totalTextField" layoutX="853.0" layoutY="362.0" prefHeight="28.0" prefWidth="100.0" promptText="0.00" disable="true" />
         <Button fx:id="guardarButton" styleClass="btn-primary" disable="true" layoutX="1014.0" layoutY="360.0" mnemonicParsing="false" onAction="#guardarButton" prefHeight="32.0" prefWidth="120.0" text="Guardar" />
 
         <Label fx:id="modoLabel" styleClass="mensaje" layoutX="14.0" layoutY="408.0" prefWidth="700.0" text="" />
 
         <Label fx:id="mensajeLabel" styleClass="mensaje" layoutX="14.0" layoutY="760.0" prefHeight="27.0" prefWidth="600.0" text="" />
-        <Button styleClass="btn-back" layoutX="14.0" layoutY="800.0" mnemonicParsing="false" onAction="#volverButton" text=" Volver al menú principal" />
+        <Button styleClass="btn-back" layoutX="14.0" layoutY="800.0" mnemonicParsing="false" onAction="#volverButton" text="Volver al menu principal" />
 
     </children>
 </AnchorPane>

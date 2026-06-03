@@ -37,7 +37,6 @@ public class OrderController {
 
     // selectores y botones
     @FXML public ComboBox<String> usuarioComboBox;
-    @FXML public ComboBox<String> filtroStatusComboBox;
     @FXML public SplitMenuButton statusMenuButton;
     @FXML public Button nuevoButton;
     @FXML public Button editarButton;
@@ -45,13 +44,9 @@ public class OrderController {
     @FXML public Button guardarButton;
     @FXML public Button verDetallesButton;
 
-    // labels de informacion y contadores
+    // labels de informacion
     @FXML public Label mensajeLabel;
     @FXML public Label modoLabel;
-    @FXML public Label contadorTotalLabel;
-    @FXML public Label contadorPendingLabel;
-    @FXML public Label contadorProcessedLabel;
-    @FXML public Label contadorCancelledLabel;
 
     // id del pedido seleccionado, compartido con orderdetailscontroller
     public static Integer idOrderSeleccionado;
@@ -120,15 +115,10 @@ public class OrderController {
             usuarioComboBox.getItems().add(usuario.getIdUser() + " - " + usuario.getName());
         }
 
-        // opciones del filtro rapido por estado
-        filtroStatusComboBox.getItems().addAll("Todos", "PENDING", "PROCESSED", "CANCELLED");
-        filtroStatusComboBox.getSelectionModel().selectFirst();
-
         // cargar pedidos y ordenar por fecha descendente
         listaCompleta = MantenimientoOrder.consulta(db);
         listaOrders = FXCollections.observableArrayList(listaCompleta);
         orderTableView.setItems(listaOrders);
-        actualizarContadores();
         orderTableView.getSortOrder().add(dateColumn);
         dateColumn.setSortType(TableColumn.SortType.DESCENDING);
         orderTableView.sort();
@@ -152,18 +142,6 @@ public class OrderController {
         }
     }
 
-    // actualiza los contadores de la barra superior
-    private void actualizarContadores() {
-        long total = listaCompleta.size();
-        long pendientes = listaCompleta.stream().filter(pedido -> "PENDING".equals(pedido.getStatus())).count();
-        long procesados = listaCompleta.stream().filter(pedido -> "PROCESSED".equals(pedido.getStatus())).count();
-        long cancelados = listaCompleta.stream().filter(pedido -> "CANCELLED".equals(pedido.getStatus())).count();
-        contadorTotalLabel.setText("Total: " + total);
-        contadorPendingLabel.setText("Pendientes: " + pendientes);
-        contadorProcessedLabel.setText("Procesados: " + procesados);
-        contadorCancelledLabel.setText("Cancelados: " + cancelados);
-    }
-
     // habilita o deshabilita los campos del formulario
     private void setFormDisable(boolean deshabilitado) {
         dateTextField.setDisable(deshabilitado);
@@ -182,23 +160,11 @@ public class OrderController {
         modoLabel.setText("");
     }
 
-    // filtra la tabla por el estado elegido en el combo rapido
-    @FXML
-    public void filtrarPorStatus() {
-        String filtro = filtroStatusComboBox.getSelectionModel().getSelectedItem();
-        if (filtro == null || filtro.equals("Todos")) {
-            listaOrders = FXCollections.observableArrayList(listaCompleta);
-        } else {
-            ObservableList<Order> listaFiltrada = FXCollections.observableArrayList();
-            for (Order pedido : listaCompleta) {
-                if (pedido.getStatus().equals(filtro)) {
-                    listaFiltrada.add(pedido);
-                }
-            }
-            listaOrders = listaFiltrada;
-        }
+    // recarga la lista de pedidos desde la base de datos y la muestra en la tabla
+    private void recargarTabla() {
+        listaCompleta = MantenimientoOrder.consulta(db);
+        listaOrders = FXCollections.observableArrayList(listaCompleta);
         orderTableView.setItems(listaOrders);
-        buscarTextField.clear();
     }
 
     // prepara el formulario para crear un pedido nuevo
@@ -264,10 +230,7 @@ public class OrderController {
             return;
         }
         mensajeLabel.setText("Pedido #" + pedidoSeleccionado.getIdOrder() + " eliminado correctamente.");
-        listaCompleta = MantenimientoOrder.consulta(db);
-        listaOrders = FXCollections.observableArrayList(listaCompleta);
-        orderTableView.setItems(listaOrders);
-        actualizarContadores();
+        recargarTabla();
         limpiarCampos();
         setFormDisable(true);
         guardarButton.setDisable(true);
@@ -325,10 +288,7 @@ public class OrderController {
             mensajeLabel.setText("Estado del pedido #" + id + " actualizado a " + estado + ".");
         }
 
-        listaCompleta = MantenimientoOrder.consulta(db);
-        listaOrders = FXCollections.observableArrayList(listaCompleta);
-        orderTableView.setItems(listaOrders);
-        actualizarContadores();
+        recargarTabla();
         limpiarCampos();
         setFormDisable(true);
         idOrderTextField.setDisable(false);

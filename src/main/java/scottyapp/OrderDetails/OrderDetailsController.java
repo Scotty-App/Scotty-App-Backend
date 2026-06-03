@@ -23,9 +23,8 @@ public class OrderDetailsController {
     private ObservableList<Item> listaProductos;
     private ObservableList<Item> listaProductosCompleta;
     private Integer idOrderActual;
-    private boolean pedidoBloqueado = false;
 
-    // Columnas de la tabla de lineas del pedido
+    // columnas de la tabla de lineas del pedido
     @FXML public TableView<OrderDetails> orderDetailsTableView;
     @FXML public TableColumn<OrderDetails, Integer> idDetailColumn;
     @FXML public TableColumn<OrderDetails, String> nombreProductoColumn;
@@ -33,23 +32,23 @@ public class OrderDetailsController {
     @FXML public TableColumn<OrderDetails, Double> subtotalColumn;
     @FXML public TableColumn<OrderDetails, Integer> idProductColumn;
 
-    // Columnas de la tabla de productos disponibles
+    // columnas de la tabla de productos disponibles
     @FXML public TableView<Item> productosTableView;
     @FXML public TableColumn<Item, Integer> idProductDisponibleColumn;
     @FXML public TableColumn<Item, String> nombreProductoDisponibleColumn;
     @FXML public TableColumn<Item, Double> priceProductColumn;
     @FXML public TableColumn<Item, Integer> stockDisponibleColumn;
 
-    // Campos del formulario de edicion de linea
+    // campos del formulario de edicion de linea
     @FXML public TextField idDetailTextField;
     @FXML public TextField quantityTextField;
     @FXML public TextField subtotalTextField;
 
-    // Campo de cantidad y buscador para añadir producto
+    // campo de cantidad y buscador para añadir producto
     @FXML public TextField cantidadTextField;
     @FXML public TextField buscarTextField;
 
-    // Labels de cabecera del pedido
+    // labels de cabecera del pedido
     @FXML public Label pedidoIdLabel;
     @FXML public Label pedidoFechaLabel;
     @FXML public Label pedidoStatusLabel;
@@ -59,10 +58,8 @@ public class OrderDetailsController {
     @FXML public Label clienteDireccionLabel;
     @FXML public Label clienteTelefonoLabel;
     @FXML public Label mensajeLabel;
-    @FXML public Label contadorLineasLabel;
-    @FXML public Label bloqueoLabel;
 
-    // Botones
+    // botones
     @FXML public Button editarButton;
     @FXML public Button eliminarButton;
     @FXML public Button guardarDetalleButton;
@@ -78,38 +75,36 @@ public class OrderDetailsController {
             return;
         }
 
-        // Enlazar columnas de lineas del pedido
+        // enlazar columnas de lineas del pedido
         idDetailColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleIntegerProperty(datos.getValue().getIdDetail()).asObject());
         nombreProductoColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleStringProperty(datos.getValue().getNombreProducto()));
         quantityColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleIntegerProperty(datos.getValue().getQuantity()).asObject());
         subtotalColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleDoubleProperty(datos.getValue().getSubtotal()).asObject());
         idProductColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleIntegerProperty(datos.getValue().getIdProduct()).asObject());
 
-        // Enlazar columnas de productos disponibles
+        // enlazar columnas de productos disponibles
         idProductDisponibleColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleIntegerProperty(datos.getValue().getIdProduct()).asObject());
         nombreProductoDisponibleColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleStringProperty(datos.getValue().getName()));
         priceProductColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleDoubleProperty(datos.getValue().getPrice()).asObject());
         stockDisponibleColumn.setCellValueFactory(datos -> new javafx.beans.property.SimpleIntegerProperty(datos.getValue().getStock()).asObject());
 
-        // Botones deshabilitados por defecto
+        // botones deshabilitados por defecto
         editarButton.setDisable(true);
         eliminarButton.setDisable(true);
         guardarDetalleButton.setDisable(true);
         anyadirProductoButton.setDisable(true);
 
-        // Cargar datos
+        // cargar datos
         cargarCabecera();
         listaDetalles = MantenimientoOrderDetails.consulta(db, idOrderActual);
         orderDetailsTableView.setItems(listaDetalles);
-        actualizarContadorLineas();
-
         listaProductosCompleta = MantenimientoItem.consulta(db);
         listaProductos = FXCollections.observableArrayList(listaProductosCompleta);
         productosTableView.setItems(listaProductos);
 
-        // Habilitar editar y eliminar al seleccionar una linea (solo si el pedido no esta bloqueado)
+        // habilitar editar y eliminar al seleccionar una linea
         orderDetailsTableView.getSelectionModel().selectedItemProperty().addListener((observable, lineaAnterior, lineaSeleccionada) -> {
-            if (lineaSeleccionada != null && !pedidoBloqueado) {
+            if (lineaSeleccionada != null) {
                 editarButton.setDisable(false);
                 eliminarButton.setDisable(false);
             } else {
@@ -118,9 +113,9 @@ public class OrderDetailsController {
             }
         });
 
-        // Habilitar añadir al seleccionar un producto disponible (solo si no esta bloqueado)
+        // habilitar añadir al seleccionar un producto disponible
         productosTableView.getSelectionModel().selectedItemProperty().addListener((observable, productoAnterior, productoSeleccionado) -> {
-            if (productoSeleccionado != null && !pedidoBloqueado) {
+            if (productoSeleccionado != null) {
                 anyadirProductoButton.setDisable(false);
             } else {
                 anyadirProductoButton.setDisable(true);
@@ -128,8 +123,7 @@ public class OrderDetailsController {
         });
     }
 
-    // Carga la cabecera con los datos del pedido y del cliente
-    // Ademas detecta si el pedido esta bloqueado por su estado
+    // carga la cabecera con los datos del pedido y del cliente
     private void cargarCabecera() {
         ObservableList<Order> todosLosPedidos = MantenimientoOrder.consulta(db);
         Order pedido = null;
@@ -150,18 +144,12 @@ public class OrderDetailsController {
         switch (estado) {
             case "PENDING":
                 pedidoStatusLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #d97706;");
-                pedidoBloqueado = false;
-                bloqueoLabel.setText("");
                 break;
             case "PROCESSED":
                 pedidoStatusLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #16a34a;");
-                pedidoBloqueado = true;
-                bloqueoLabel.setText("Pedido PROCESSED: no se puede modificar.");
                 break;
             case "CANCELLED":
                 pedidoStatusLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #6b7280;");
-                pedidoBloqueado = true;
-                bloqueoLabel.setText("Pedido CANCELLED: no se puede modificar.");
                 break;
         }
 
@@ -181,18 +169,6 @@ public class OrderDetailsController {
         clienteTelefonoLabel.setText(cliente.getPhone() != null ? cliente.getPhone() : "—");
     }
 
-    // Actualiza el contador de lineas encima de la tabla
-    private void actualizarContadorLineas() {
-        int numeroLineas = listaDetalles.size();
-        if (numeroLineas == 0) {
-            contadorLineasLabel.setText("(sin productos)");
-        } else if (numeroLineas == 1) {
-            contadorLineasLabel.setText("(1 producto)");
-        } else {
-            contadorLineasLabel.setText("(" + numeroLineas + " productos)");
-        }
-    }
-
     private void limpiarFormulario() {
         idDetailTextField.clear();
         quantityTextField.clear();
@@ -200,7 +176,7 @@ public class OrderDetailsController {
         quantityTextField.setDisable(true);
     }
 
-    // Filtra la tabla de productos disponibles por nombre
+    // filtra la tabla de productos disponibles por nombre
     @FXML
     public void buscarButton() {
         String textoBuscar = buscarTextField.getText().toLowerCase().trim();
@@ -217,13 +193,9 @@ public class OrderDetailsController {
         productosTableView.setItems(listaFiltrada);
     }
 
-    // Añade un producto al pedido o suma cantidad si ya existe como linea
+    // añade un producto al pedido o suma cantidad si ya existe como linea
     @FXML
     public void anyadirProductoButton() {
-        if (pedidoBloqueado) {
-            mensajeLabel.setText("No se puede modificar un pedido " + pedidoStatusLabel.getText() + ".");
-            return;
-        }
         Item productoSeleccionado = productosTableView.getSelectionModel().getSelectedItem();
         if (productoSeleccionado == null) {
             mensajeLabel.setText("Selecciona un producto de la lista.");
@@ -250,7 +222,7 @@ public class OrderDetailsController {
             return;
         }
 
-        // Comprobar si el producto ya existe como linea en este pedido
+        // comprobar si el producto ya existe como linea en este pedido
         OrderDetails lineaExistente = null;
         for (OrderDetails linea : listaDetalles) {
             if (linea.getIdProduct().equals(productoSeleccionado.getIdProduct())) {
@@ -260,16 +232,12 @@ public class OrderDetailsController {
         }
 
         if (lineaExistente != null) {
-            // El producto ya esta en el pedido: sumar cantidad y recalcular subtotal
+            // el producto ya esta en el pedido: sumar cantidad y recalcular subtotal
             Integer nuevaCantidad = lineaExistente.getQuantity() + cantidad;
             Double nuevoSubtotal = productoSeleccionado.getPrice() * nuevaCantidad;
             OrderDetails lineaActualizada = new OrderDetails(
-                    lineaExistente.getIdDetail(),
-                    nuevaCantidad,
-                    nuevoSubtotal,
-                    idOrderActual,
-                    lineaExistente.getIdProduct(),
-                    lineaExistente.getNombreProducto()
+                    lineaExistente.getIdDetail(), nuevaCantidad, nuevoSubtotal,
+                    idOrderActual, lineaExistente.getIdProduct(), lineaExistente.getNombreProducto()
             );
             if (MantenimientoOrderDetails.guardar(db, lineaActualizada)) {
                 mensajeLabel.setText("Cantidad actualizada: " + productoSeleccionado.getName()
@@ -279,7 +247,7 @@ public class OrderDetailsController {
                 return;
             }
         } else {
-            // El producto no estaba: crear linea nueva
+            // el producto no estaba: crear linea nueva
             Double subtotal = productoSeleccionado.getPrice() * cantidad;
             OrderDetails nuevaLinea = new OrderDetails(
                     null, cantidad, subtotal, idOrderActual,
@@ -287,7 +255,7 @@ public class OrderDetailsController {
             );
             if (MantenimientoOrderDetails.insertar(db, nuevaLinea)) {
                 mensajeLabel.setText("Añadido: " + productoSeleccionado.getName()
-                        + " x" + cantidad + " = " + String.format(Locale.US, "%.2f EUR", subtotal));
+                        + " x" + cantidad + " = " + String.format(Locale.US, "%.2f EUR", productoSeleccionado.getPrice() * cantidad));
             } else {
                 mensajeLabel.setText("Error al añadir el producto.");
                 return;
@@ -297,19 +265,14 @@ public class OrderDetailsController {
         MantenimientoOrderDetails.recalcularTotal(db, idOrderActual);
         listaDetalles = MantenimientoOrderDetails.consulta(db, idOrderActual);
         orderDetailsTableView.setItems(listaDetalles);
-        actualizarContadorLineas();
         cantidadTextField.clear();
         productosTableView.getSelectionModel().clearSelection();
         cargarCabecera();
     }
 
-    // Carga los datos de la linea seleccionada en el formulario de edicion
+    // carga los datos de la linea seleccionada en el formulario de edicion
     @FXML
     public void editarButton() {
-        if (pedidoBloqueado) {
-            mensajeLabel.setText("No se puede modificar un pedido " + pedidoStatusLabel.getText() + ".");
-            return;
-        }
         OrderDetails lineaSeleccionada = orderDetailsTableView.getSelectionModel().getSelectedItem();
         if (lineaSeleccionada == null) {
             mensajeLabel.setText("No hay ninguna linea seleccionada.");
@@ -323,7 +286,7 @@ public class OrderDetailsController {
         mensajeLabel.setText("Modifica la cantidad y pulsa Guardar cambios.");
     }
 
-    // Guarda los cambios de cantidad y recalcula subtotal y total del pedido
+    // guarda los cambios de cantidad y recalcula subtotal y total del pedido
     @FXML
     public void guardarDetalleButton() {
         if (idDetailTextField.getText().isEmpty()) {
@@ -343,7 +306,7 @@ public class OrderDetailsController {
             return;
         }
 
-        // Buscar la linea original para obtener el producto
+        // buscar la linea original para obtener el producto
         OrderDetails lineaOriginal = null;
         for (OrderDetails linea : listaDetalles) {
             if (linea.getIdDetail().equals(idLinea)) {
@@ -356,7 +319,7 @@ public class OrderDetailsController {
             return;
         }
 
-        // Buscar el precio unitario del producto en la lista de productos
+        // buscar el precio unitario del producto para recalcular el subtotal
         Item productoDeLinea = null;
         for (Item producto : listaProductos) {
             if (producto.getIdProduct().equals(lineaOriginal.getIdProduct())) {
@@ -378,7 +341,6 @@ public class OrderDetailsController {
             MantenimientoOrderDetails.recalcularTotal(db, idOrderActual);
             listaDetalles = MantenimientoOrderDetails.consulta(db, idOrderActual);
             orderDetailsTableView.setItems(listaDetalles);
-            actualizarContadorLineas();
             cargarCabecera();
             limpiarFormulario();
             guardarDetalleButton.setDisable(true);
@@ -388,13 +350,9 @@ public class OrderDetailsController {
         }
     }
 
-    // Elimina la linea seleccionada y recalcula el total del pedido
+    // elimina la linea seleccionada y recalcula el total del pedido
     @FXML
     public void eliminarButton() {
-        if (pedidoBloqueado) {
-            mensajeLabel.setText("No se puede modificar un pedido " + pedidoStatusLabel.getText() + ".");
-            return;
-        }
         OrderDetails lineaSeleccionada = orderDetailsTableView.getSelectionModel().getSelectedItem();
         if (lineaSeleccionada == null) {
             mensajeLabel.setText("No hay ninguna linea seleccionada.");
@@ -404,7 +362,6 @@ public class OrderDetailsController {
             MantenimientoOrderDetails.recalcularTotal(db, idOrderActual);
             listaDetalles = MantenimientoOrderDetails.consulta(db, idOrderActual);
             orderDetailsTableView.setItems(listaDetalles);
-            actualizarContadorLineas();
             cargarCabecera();
             limpiarFormulario();
             guardarDetalleButton.setDisable(true);

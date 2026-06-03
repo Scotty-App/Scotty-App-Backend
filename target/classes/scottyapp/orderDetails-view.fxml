@@ -30,8 +30,6 @@
         </AnchorPane>
 
         <Label text="Lineas del pedido:" layoutX="14.0" layoutY="112.0" style="-fx-font-weight: bold; -fx-text-fill: #1e3a5f;" />
-        <Label fx:id="contadorLineasLabel" layoutX="160.0" layoutY="112.0" style="-fx-text-fill: #64748b; -fx-font-style: italic;" text="" />
-        <Label fx:id="bloqueoLabel" layoutX="600.0" layoutY="112.0" style="-fx-text-fill: #dc2626; -fx-font-weight: bold;" text="" />
 
         <TableView fx:id="orderDetailsTableView" prefHeight="210.0" prefWidth="1150.0" layoutX="0.0" layoutY="132.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <columns>
